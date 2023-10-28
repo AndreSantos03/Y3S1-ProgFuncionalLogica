@@ -51,6 +51,7 @@ initialstate(
     ],
 )
 
+[https://github.com/dmfrodrigues/feup-plog-tp1]
 
 board_is_valid_position(I-J) :- between(0, 4, I), R is I+4, between(0, R, J).
 board_is_valid_position(I-J) :- between(5, 8, I), L is I-4, between(L, 8, J).
