@@ -135,11 +135,11 @@ count_pieces(Value, [Value | Rest], Count) :-
     Count is SubCount + 1.
 count_pieces(Value, [_ | Rest], Count) :-
     count_pieces(Value, Rest, Count).
+
  */
 
-
 %possible fix for the poor counting
-count_pieces(_, [], 0).
+count_pieces(_,[],0).
 count_pieces(Value, [Value | Rest], Count) :-
     count_pieces(Value, Rest, SubCount),
     Count is SubCount + 1.
@@ -163,7 +163,10 @@ steps_in_diag(Color,Index, Count) :-
     Color = 1,
     count_in_diag(1,Index,Count1),
     count_in_diag(2,Index,Count2),
+    format('count1(white) = ~w    count2 (blacks)= ~w',[Count1,Count2]),
+
     Count is Count1 - Count2.
+
 
 steps_in_diag(Color,Index, Count) :-
     Color = 2,
@@ -204,7 +207,7 @@ valid_move(Color,Ui-Uj, Vi-Vj) :-
 
 %white_piece
 
-valid_move(1,Ui-Uj, Vi-Vj) :- 
+/* valid_move(1,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
     steps_in_diag(1,Uj,Count), 
     Vi is Ui - Count, 
@@ -216,6 +219,22 @@ valid_move(1,Ui-Uj, Vi-Vj) :-
     steps_in_diag(1,Uj,Count), 
     Vi is Ui - Count, 
     Vj is Uj - Count,
+    is_valid_position(Vi-Vj). %up_left */
+
+valid_move(1,Ui-Uj, Vi-Vj) :- 
+    is_valid_position(Ui-Uj),
+    steps_in_diag(1,Uj,Count),
+    Vi is Ui - Count, 
+    Vj is Uj + Count,
+    is_valid_position(Vi-Vj). %up_right
+
+valid_move(1,Ui-Uj, Vi-Vj) :- 
+    is_valid_position(Ui-Uj),
+    steps_in_diag(1,Uj,Count), 
+    write(Count),
+    Vi is Ui - Count, 
+    Vj is Uj,
+
     is_valid_position(Vi-Vj). %up_left
 
 %black_piece
@@ -224,12 +243,12 @@ valid_move(2,Ui-Uj, Vi-Vj) :-
     is_valid_position(Ui-Uj),
     steps_in_diag(2,Uj,Count), 
     Vi is Ui + Count, 
-    Vj is Uj + Count,
+    Vj is Uj - Count,
     is_valid_position(Vi-Vj). %below_right
 
-valid_move(2,Ui-Uj, Vi-Vj) :- 
+valid_move(2,Ui-Uj, Vi-Vj) :-
     is_valid_position(Ui-Uj),
     steps_in_diag(2,Uj,Count), 
     Vi is Ui + Count, 
-    Vj is Uj - Count,
+    Vj is Uj,
     is_valid_position(Vi-Vj). %below_right
