@@ -140,7 +140,6 @@ print_middle_row([3|Rest]):-
 
 
 
-
 print_board([]).
 
 print_board([Row|Rest]) :-
