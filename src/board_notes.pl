@@ -37,7 +37,7 @@
  *  
 **/
 
-initialstate(
+/* initialstate(
     [ % Board
         [  0,  0,  0,  0,  0,nan,nan,nan,nan],
         [  0,  1,  1,  1,  1,  0,nan,nan,nan],
@@ -49,9 +49,36 @@ initialstate(
         [nan,nan,nan,  0,  2,  2,  2,  2,  0],
         [nan,nan,nan,nan,  0,  0,  0,  0,  0]
     ],
-)
+) */
 
-[https://github.com/dmfrodrigues/feup-plog-tp1/blob/master/src/board.pl]
+/* initialstate(
+    [ % Board
+        [nan,nan,nan,nan,0,  0,  0,  0,  0],
+        [nan,nan,nan,  0,  2,  2,  2,  2,  0],
+        [nan,nan,  0,  2,  0,  2,  0,  2,  0],
+        [nan,  0,  2,  2,  2,  2,  2,  2,  0],
+        [  0,  0,  0,  0,  0,  0,  0,  0,  0],
+        [  0,  1,  1,  1,  1,  1,  1,  0,nan],
+        [  0,  1,  0,  1,  0,  1,  0,nan,nan],
+        [  0,  1,  1,  1,  1,  0,nan,nan,nan],
+        [  0,  0,  0,  0,  0,nan,nan,nan,nan],
+    ]
+).
+ */
+
+ initial_state([ % Board
+    [nan,nan,nan,nan,0,0,0,0,0],
+    [nan,nan,nan,0,2,2,2,2,0],
+    [nan,nan,0,2,0,2,0,2,0],
+    [nan,0,2,2,2,2,2,2,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,0,nan],
+    [0,1,0,1,0,1,0,nan,nan],
+    [0,1,1,1,1,0,nan,nan,nan],
+    [0,0,0,0,0,nan,nan,nan,nan]
+]).
+
+%[https://github.com/dmfrodrigues/feup-plog-tp1/blob/master/src/board.pl]
 
 board_is_valid_position(I-J) :- between(0, 4, I), R is I+4, between(0, R, J).
 board_is_valid_position(I-J) :- between(5, 8, I), L is I-4, between(L, 8, J).
