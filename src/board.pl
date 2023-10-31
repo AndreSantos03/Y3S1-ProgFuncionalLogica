@@ -128,12 +128,23 @@ count_in_diag(Color,Index,Count) :-
     maplist(nth0(Index), Board, NthElements),
     count_pieces(Color, NthElements, Count).
 
-% Define a predicate to count occurrences of a value in a list
+/* % Define a predicate to count occurrences of a value in a list
 count_pieces(_, [], 0).
 count_pieces(Value, [Value | Rest], Count) :-
     count_pieces(Value, Rest, SubCount),
     Count is SubCount + 1.
 count_pieces(Value, [_ | Rest], Count) :-
+    count_pieces(Value, Rest, Count).
+ */
+
+
+%possible fix for the poor counting
+count_pieces(_, [], 0).
+count_pieces(Value, [Value | Rest], Count) :-
+    count_pieces(Value, Rest, SubCount),
+    Count is SubCount + 1.
+count_pieces(Value, [First | Rest], Count) :-
+    First =\= Value,
     count_pieces(Value, Rest, Count).
 
 steps_in_row(Color,Index, Count) :-
@@ -206,6 +217,8 @@ valid_move(1,Ui-Uj, Vi-Vj) :-
     Vi is Ui - Count, 
     Vj is Uj - Count,
     is_valid_position(Vi-Vj). %up_left
+
+%black_piece
 
 valid_move(2,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
