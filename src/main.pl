@@ -1,6 +1,7 @@
-:-consult('board_notes.pl').
 :-consult('board.pl').
 :-consult('menu.pl').
+:-consult('logic.pl')
+
 
 %Main predicate
 play :-
