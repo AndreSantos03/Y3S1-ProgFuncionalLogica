@@ -252,3 +252,68 @@ valid_move(2,Ui-Uj, Vi-Vj) :-
     Vi is Ui + Count, 
     Vj is Uj,
     is_valid_position(Vi-Vj). %below_right
+
+
+
+
+%get diagonals lists
+get_bottom_left(8-J, 8-J).
+get_bottom_left(I-0,I-0).
+
+
+get_bottom_left(I-J, N-M) :-
+    N1 is I + 1,
+    M1 is J - 1,
+    get_bottom_left(N1-M1, N-M).
+
+/* pieces_diagonal(I-J,List1,List2) :-
+    initialstate(Board),
+    ILeft is 8,
+    JLeft is J,
+    pieces_diagonal_left(ILeft-JLeft,List1,Board),
+    get_bottom_left(I-J,IRight-JRight),
+    pieces_diagonal_right(ILeft-IRight,List2,Board).
+
+
+pieces_diagonal_left(I-J,List,Board):-
+    I>=0,
+    nth(I,Board,ListAux),
+    nth(J,ListAux,Element),
+    NewList is [List|Element],
+    List is NewList,
+    New_i is I - 1,
+    New_j is J,
+    pieces_diagonal_left(New_i-New_j,List,Board).
+ */
+
+
+print_list([]) :-
+    nl. % Newline when the list is empty.
+print_list([Head|Tail]) :-
+    write(Head), % Print the head of the list.
+    write(' '),   % Add a space between elements.
+    print_list(Tail). % Recursively print the tail of the list.
+
+test(List):-
+    initialstate(Board),
+    pieces_diagonal_right(0-5,List,Board).
+
+pieces_diagonal_right(0-J, List, Board),
+    write("dadadawdada\n"),
+    print_list(List).
+    
+
+insertAtEnd(X,[ ],[X]).
+insertAtEnd(X,[H|T],[H|Z]) :- insertAtEnd(X,T,Z).    
+
+pieces_diagonal_right(I-J, List, Board) :-
+    I >= 0,
+    J =< 8,
+    nth0(I, Board, ListAux),  
+    nth0(J, ListAux, Element),
+    insertAtEnd()
+    
+    print_list(NewList),
+    New_i is I - 1,
+    New_j is J + 1,
+    pieces_diagonal_right(New_i-New_j, NewList, Board).
