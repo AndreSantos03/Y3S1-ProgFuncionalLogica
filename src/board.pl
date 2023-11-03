@@ -298,4 +298,95 @@ pieces_diagonal_right(I-J, List, Board) :-
     append([Element], NewList, List),  
     New_i is I - 1,
     New_j is J + 1,
+<<<<<<< HEAD
     pieces_diagonal_right(New_i-New_j, NewList, Board). 
+=======
+    pieces_diagonal_right(New_i-New_j, NewList, Board).
+
+read_number(Number) :-
+read_number(0, Number).
+
+% Base case: when Line Feed (ASCII 10) is encountered, stop and return the accumulated number
+read_number(Number, Number) :- peek_code(10), !.
+
+% Read digits and update the accumulated number
+read_number(CurrentNumber, Number) :-
+    peek_code(Code),
+    Code >= 48, Code =< 57, % Check if the code is a digit (ASCII 48-57)
+    DigitValue is Code - 48, % Convert ASCII code to digit value
+    NewNumber is CurrentNumber * 10 + DigitValue,
+    get_code(_), % Consume the character
+    read_number(NewNumber, Number).
+
+% Skip non-digit characters
+read_number(CurrentNumber, Number) :-
+    get_code(_),
+    read_number(CurrentNumber, Number).
+
+get_base_coordinates(Color, I-J) :-
+    write('Enter the coordinates (I-J) from where you want to move your piece: '), nl,
+    read_number(Number),
+    integer(Number),
+    Number >= 0,
+    parse_coordinates(Number, I, J),
+    is_valid_position(I-J),
+    get_value(I-J, Color).
+
+get_target_coordinates(I-J) :-
+    write('Enter the coordinates (I-J) to where you want to move your piece: '),
+    read_number(Number),
+    integer(Number),
+    Number >= 0,
+    parse_coordinates(Number, I, J),
+    is_valid_position(I-J),
+    is_empty(I-J).
+
+move_choice(Color, I-J, I1-J1) :-
+    get_base_coordinates(Color, I-J),
+    get_target_coordinates(I1-J1).
+    %valid_move(Color,I-J,I1-J1).
+
+/*move(Board, Color, I,J, I1,J1, FinalBoard) :-
+   initialstate(Board),
+   update_board(Board, I, J, 0, TempBoard),
+   update_board(TempBoard, I1, J1, Color, FinalBoard).
+*/
+
+parse_coordinates(Number, I, J) :-
+    I is Number // 10,
+    J is Number mod 10.
+
+is_empty(I-J) :-
+    get_value(I-J, 0).
+
+get_value(I-J, Value) :-
+    initialstate(Board), % Load the board
+    nth0(I, Board, Row), % Get the row at position I
+    nth0(J, Row, Value). % Get the value at position J
+    
+update_board(Board, I, J, NewValue, NewBoard) :-
+    initialstate(Board),
+    update_cell(Board, I, J, NewValue, UpdatedBoard),
+    NewBoard = UpdatedBoard.
+
+update_cell([Row | Rest], 0, J, NewValue, [UpdatedRow | Rest]) :-
+    update_row(Row, J, NewValue, UpdatedRow).
+
+update_cell([Row | Rest], I, J, NewValue, [Row | UpdatedRest]) :-
+    I > 0,
+    I1 is I - 1,
+    update_cell(Rest, I1, J, NewValue, UpdatedRest).
+
+update_row([_ | Rest], 0, NewValue, [NewValue | Rest]).
+
+update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
+    J > 0,
+    J1 is J - 1,
+    update_row(Rest, J1, NewValue, UpdatedRest).
+
+
+
+
+
+
+>>>>>>> 8e9a6b5a1d263d36d58df88bd3cbade9fcb9dd58
