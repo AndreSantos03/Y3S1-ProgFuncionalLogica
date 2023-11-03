@@ -297,10 +297,7 @@ pieces_diagonal_right(I-J, List, Board) :-
     nth0(J, ListAux, Element),
     append([Element], NewList, List),  
     New_i is I - 1,
-    New_j is J + 1,
-<<<<<<< HEAD
-    pieces_diagonal_right(New_i-New_j, NewList, Board). 
-=======
+    New_j is J + 1,    
     pieces_diagonal_right(New_i-New_j, NewList, Board).
 
 read_number(Number) :-
