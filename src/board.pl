@@ -44,6 +44,7 @@
 %1 stands for white piece
 %2 stands for black piece
 %3 stands for unused space, mostly for spacing
+
 initialstate([ % Board
     [3,3,3,3,0,0,0,0,0],
     [3,3,3,0,2,2,2,2,0],
@@ -56,16 +57,17 @@ initialstate([ % Board
     [0,0,0,0,0,3,3,3,3]
 ]).
 
-
-is_valid_position(I-J) :- between(0, 4, I), R is I+4-2*I, between(R, 8, J).
-is_valid_position(I-J) :- between(5, 8, I), L is 12-I, between(0, L, J).
-
-
-between(L, R, I) :- ground(I), !, L =< I, I =< R.
-between(L, L, I) :- I is L, !.
-between(L, R, I) :- L < R, I is L.
-between(L, R, I) :- L < R, L1 is L+1, between(L1, R, I).
-
+intermediatestate([ % Board
+    [3,3,3,3,0,0,0,0,0],
+    [3,3,3,0,2,2,2,0,0],
+    [3,3,2,1,0,1,0,0,0],
+    [3,0,2,0,1,2,2,0,0],
+    [0,0,1,2,2,0,0,2,0],
+    [0,1,1,2,1,1,1,0,3],
+    [0,0,1,1,2,1,0,3,3],
+    [0,1,2,0,0,0,3,3,3],
+    [0,0,0,0,0,3,3,3,3]
+]).
 
 print_row(Row):-
     count_occurrences(3, Row, Count3),
@@ -76,10 +78,6 @@ print_row(Row):-
 count_occurrences(Item, List, Count) :-
     include(==(Item), List, Filtered),
     length(Filtered, Count).
-
-%to get the other color
-other_color(1,2).
-other_color(2,1).
 
 print_spaces(0).
 
@@ -133,10 +131,40 @@ print_initial_state :-
     initialstate(Board),
     print_board(Board).
 
-/* count_in_diag(Color,Index,Count) :-
+count_in_row(Color, Index, Count) :-
+    initialstate(Board),
+    nth0(Index, Board, Row),
+    count_pieces(Color, Row, Count).
+
+list_bl(I-J, List) :-
+    initialstate(Board),
+    list_bl(Board, I-J, [], List).
+
+% Base case: When J is less than or equal to 0, return the list
+list_bl(_, _-_, Acc, Acc).
+
+% Recursive case
+list_bl(Board, I-J, Acc, List) :-
+    J > 0,
+    nth0(I, Board, Row), % Get the row at position I
+    nth0(J, Row, Value), % Get the value at position J
+
+    % Calculate new positions I1 and J1 for the next iteration
+    I1 is I + 1,
+    J1 is J - 1,
+
+    % Add the current Value to the accumulator
+    append(Acc, [Value], NewAcc),
+
+    % Recursive call with updated positions and the updated accumulator
+    list_bl(Board, I1-J1, NewAcc, List).
+
+% Define your initialstate predicate
+
+count_ul_br(Color,Index,Count) :-
     initialstate(Board),
     maplist(nth0(Index), Board, NthElements),
-    count_pieces(Color, NthElements, Count). */
+    count_pieces(Color, NthElements, Count).
 
 /* % Define a predicate to count occurrences of a value in a list
 count_pieces(_, [], 0).
@@ -157,13 +185,6 @@ count_pieces(Value, [First | Rest], Count) :-
     First =\= Value,
     count_pieces(Value, Rest, Count).
 
-
-count_in_row(Color, Index, Count) :-
-    initialstate(Board),
-    nth0(Index, Board, Row),
-    count_pieces(Color, Row, Count).
-
-
 steps_in_row(Color,Index, Count) :-
     Color = 1,
     count_in_row(1,Index,Count1),
@@ -176,33 +197,43 @@ steps_in_row(Color,Index, Count) :-
     count_in_row(2,Index,Count2),
     Count is Count2 - Count1.
 
+steps_in_diag(Color,Index, Count) :-
+    Color = 1,
+    count_in_diag(1,Index,Count1),
+    count_in_diag(2,Index,Count2),
+    format('count1(white) = ~w    count2 (blacks)= ~w',[Count1,Count2]),
 
-%The left diagonal is the diagonal that keeps the same I
-steps_in_diag_left(Color,I-J,Steps):-
-    initialstate(Board),
-    pieces_diagonal_left(8-J,List,Board),
-    count_pieces(Color,List,SameColor),
-    other_color(Color,OpColor),
-    count_pieces(OpColor,List,OtherColor),
-    Steps is SameColor - OtherColor.
+    Count is Count1 - Count2.
 
-%The Other Diagonal
-steps_in_diag_right(Color,I-J,Steps):-
-    initialstate(Board),
-    get_bottom_left(I-J,NewI-NewJ),
-    pieces_diagonal_right(NewI-NewJ,List,Board),
-    count_pieces(Color,List,SameColor),
-    other_color(Color,OpColor),
-    count_pieces(OpColor,List,OtherColor),
-    Steps is SameColor - OtherColor.
-    
-%ROWS
+
+steps_in_diag(Color,Index, Count) :-
+    Color = 2,
+    count_in_diag(1,Index,Count1),
+    count_in_diag(2,Index,Count2),
+    Count is Count2 - Count1.
+
+is_valid_position(I-J) :- between(0, 4, I), R is I+4-2*I, between(R, 8, J).
+is_valid_position(I-J) :- between(5, 8, I), L is 12-I, between(0, L, J).
+
+/**
+ * between(+L, +R, ?I)
+ * 
+ * If I is binded, it checks if L =< I =< R.
+ * If I is not binded, it is successively assigned
+ * to the integers between L and R inclusive.
+ */
+ 
+between(L, R, I) :- ground(I), !, L =< I, I =< R.
+between(L, L, I) :- I is L, !.
+between(L, R, I) :- L < R, I is L.
+between(L, R, I) :- L < R, L1 is L+1, between(L1, R, I).
+
 
 valid_move(Color,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
     steps_in_row(Color,Ui,Count), 
     Vi is Ui, 
-    Vj is Uj  +Count,
+    Vj is Uj + Count,
     is_valid_position(Vi-Vj). %right
 
 valid_move(Color,Ui-Uj, Vi-Vj) :- 
@@ -212,134 +243,86 @@ valid_move(Color,Ui-Uj, Vi-Vj) :-
     Vj is Uj - Count,
     is_valid_position(Vi-Vj). %right
 
-%DIAGONALS
+%white_piece
 
-%White pieces
-valid_move(1,Ui-Uj,Vi-Vj):-
+/* valid_move(1,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
-    steps_in_diag_left(1,Ui-Uj,Steps),
-    Vi is Ui - Steps,
-    Vj is Uj.
+    steps_in_diag(1,Uj,Count), 
+    Vi is Ui - Count, 
+    Vj is Uj + Count,
+    is_valid_position(Vi-Vj). %up_right
 
-valid_move(1,Ui-Uj,Vi-Vj):-
+valid_move(1,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
-    steps_in_diag_right(1,Ui-Uj,Steps),
-    Vi is Ui - Steps,
-    Vj is Uj + Steps.
+    steps_in_diag(1,Uj,Count), 
+    Vi is Ui - Count, 
+    Vj is Uj - Count,
+    is_valid_position(Vi-Vj). %up_left */
 
-%Black Pieces
-valid_move(2,Ui-Uj,Vi-Vj):-
+valid_move(1,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
-    steps_in_diag_left(1,Ui-Uj,Steps),
-    Vi is Ui - Steps,
-    Vj is Uj.
+    steps_in_diag(1,Uj,Count),
+    Vi is Ui - Count, 
+    Vj is Uj + Count,
+    is_valid_position(Vi-Vj). %up_right
 
-valid_move(2,Ui-Uj,Vi-Vj):-
+valid_move(1,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
-    steps_in_diag_right(1,Ui-Uj,Steps),
-    Vi is Ui - Steps,
-    Vj is Uj + Steps.
+    steps_in_diag(1,Uj,Count), 
+    write(Count),
+    Vi is Ui - Count, 
+    Vj is Uj,
 
+    is_valid_position(Vi-Vj). %up_left
 
-get_bottom_left(8-J, 8-J).
-get_bottom_left(I-0, I-0).
+%black_piece
 
-get_bottom_left(I-J, N-M) :-
-    I > 0,
-    J > 0,
-    N1 is I + 1,
-    M1 is J - 1,
-    get_bottom_left(N1-M1, N-M).
+valid_move(2,Ui-Uj, Vi-Vj) :- 
+    is_valid_position(Ui-Uj),
+    steps_in_diag(2,Uj,Count), 
+    Vi is Ui + Count, 
+    Vj is Uj - Count,
+    is_valid_position(Vi-Vj). %below_right
 
-/* %gets both diagonals to count the pieces in either
-pieces_diagonal(I-J,List1,List2,Board):-
-    pieces_diagonal_left(8-J,List1,Board),
-    get_bottom_left(I-J,NewI-NewJ),
-    pieces_diagonal_right(NewI-NewJ,List2,Board). */
+valid_move(2,Ui-Uj, Vi-Vj) :-
+    is_valid_position(Ui-Uj),
+    steps_in_diag(2,Uj,Count), 
+    Vi is Ui + Count, 
+    Vj is Uj,
+    is_valid_position(Vi-Vj). %below_right
 
-% Base case to stop the recursion when I or J are out of bounds
-pieces_diagonal_left(I-_, [], _) :- I < 0.
-
-pieces_diagonal_left(I-J, List, Board) :-
-    I >= 0,
-    nth0(I, Board, ListAux),  
-    nth0(J, ListAux, Element),
-    append([Element], NewList, List),  
-    New_i is I - 1,
-    New_j is J,
-    pieces_diagonal_left(New_i-New_j, NewList, Board).  
-
-
-
-% Base case to stop the recursion when I or J are out of bounds
-pieces_diagonal_right(I-_, [], _) :- I < 0.
-pieces_diagonal_right(_-J, [], _) :- J > 8.
-
-pieces_diagonal_right(I-J, List, Board) :-
-    I >= 0,
-    J =< 8,
-    nth0(I, Board, ListAux),  
-    nth0(J, ListAux, Element),
-    append([Element], NewList, List),  
-    New_i is I - 1,
-    New_j is J + 1,    
-    pieces_diagonal_right(New_i-New_j, NewList, Board).
-
-read_number(Number) :-
-read_number(0, Number).
-
-% Base case: when Line Feed (ASCII 10) is encountered, stop and return the accumulated number
-read_number(Number, Number) :- peek_code(10), !.
-
-% Read digits and update the accumulated number
-read_number(CurrentNumber, Number) :-
-    peek_code(Code),
-    Code >= 48, Code =< 57, % Check if the code is a digit (ASCII 48-57)
-    DigitValue is Code - 48, % Convert ASCII code to digit value
-    NewNumber is CurrentNumber * 10 + DigitValue,
-    get_code(_), % Consume the character
-    read_number(NewNumber, Number).
-
-% Skip non-digit characters
-read_number(CurrentNumber, Number) :-
-    get_code(_),
-    read_number(CurrentNumber, Number).
+% Custom predicate to read a line and parse coordinates in "I-J" format
+read_coordinates(I-J) :-
+    write('I = '),
+    read(I), % Read the first number into I
+    write('J = '),
+    read(J),
+    !. % Read the second number into J
 
 get_base_coordinates(Color, I-J) :-
-    write('Enter the coordinates (I-J) from where you want to move your piece: '), nl,
-    read_number(Number),
-    integer(Number),
-    Number >= 0,
-    parse_coordinates(Number, I, J),
-    is_valid_position(I-J),
-    get_value(I-J, Color).
+    write('Enter the coordinates (I-J) from where you want to move your piece: '),
+    read_coordinates(I-J),
+    get_value(I-J,Color),
+    is_valid_position(I-J).
 
 get_target_coordinates(I-J) :-
     write('Enter the coordinates (I-J) to where you want to move your piece: '),
-    read_number(Number),
-    integer(Number),
-    Number >= 0,
-    parse_coordinates(Number, I, J),
-    is_valid_position(I-J),
-    is_empty(I-J).
+    read_coordinates(I-J),
+    is_empty(I-J),
+    is_valid_position(I-J).
 
 move_choice(Color, I-J, I1-J1) :-
     get_base_coordinates(Color, I-J),
     get_target_coordinates(I1-J1).
     %valid_move(Color,I-J,I1-J1).
 
-/*move(Board, Color, I,J, I1,J1, FinalBoard) :-
-   initialstate(Board),
-   update_board(Board, I, J, 0, TempBoard),
-   update_board(TempBoard, I1, J1, Color, FinalBoard).
-*/
+move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
+    update_board(Board, I, J, 0, TempBoard),
+    update_board(TempBoard, I1, J1, Color, FinalBoard).
 
-parse_coordinates(Number, I, J) :-
-    I is Number // 10,
-    J is Number mod 10.
-
-is_empty(I-J) :-
-    get_value(I-J, 0).
+move(Board,Color,  I-J, I1-J1, FinalBoard) :-
+    move_choice(Color, I-J, I1-J1),
+    move_board(Board,Color,I-J, I1-J1, FinalBoard).
 
 get_value(I-J, Value) :-
     initialstate(Board), % Load the board
@@ -347,7 +330,6 @@ get_value(I-J, Value) :-
     nth0(J, Row, Value). % Get the value at position J
     
 update_board(Board, I, J, NewValue, NewBoard) :-
-    initialstate(Board),
     update_cell(Board, I, J, NewValue, UpdatedBoard),
     NewBoard = UpdatedBoard.
 
@@ -366,6 +348,24 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
     J1 is J - 1,
     update_row(Rest, J1, NewValue, UpdatedRest).
 
+/*
+is_game_over(I-J) :-
+    (I = 0; I = 8).
+
+play_game(Board, Color, FinalBoard) :-
+    write('Player '), write(Color), write('\'s turn:\n'),
+    move(Board, Color, I-J, I1-J1, TempBoard),
+    switch_color(Color, NextColor),
+    (is_game_over(I1-J1) -> FinalBoard = TempBoard ; play_game(TempBoard, NextColor, FinalBoard)).
+
+% Custom predicate to switch the turn between players
+switch_color(1, 2).
+switch_color(2, 1).
+
+% Entry point for the game
+game(InitialBoard, FinalBoard) :-
+    play_game(InitialBoard, 1, FinalBoard).
+*/
 
 
 
