@@ -56,6 +56,17 @@ initialstate([ % Board
     [0,0,0,0,0,3,3,3,3]
 ]).
 
+
+is_valid_position(I-J) :- between(0, 4, I), R is I+4-2*I, between(R, 8, J).
+is_valid_position(I-J) :- between(5, 8, I), L is 12-I, between(0, L, J).
+
+
+between(L, R, I) :- ground(I), !, L =< I, I =< R.
+between(L, L, I) :- I is L, !.
+between(L, R, I) :- L < R, I is L.
+between(L, R, I) :- L < R, L1 is L+1, between(L1, R, I).
+
+
 print_row(Row):-
     count_occurrences(3, Row, Count3),
     AmountSpaces is 2 * Count3,
@@ -118,11 +129,6 @@ print_initial_state :-
     initialstate(Board),
     print_board(Board).
 
-count_in_row(Color, Index, Count) :-
-    initialstate(Board),
-    nth0(Index, Board, Row),
-    count_pieces(Color, Row, Count).
-
 /* count_in_diag(Color,Index,Count) :-
     initialstate(Board),
     maplist(nth0(Index), Board, NthElements),
@@ -147,6 +153,13 @@ count_pieces(Value, [First | Rest], Count) :-
     First =\= Value,
     count_pieces(Value, Rest, Count).
 
+
+count_in_row(Color, Index, Count) :-
+    initialstate(Board),
+    nth0(Index, Board, Row),
+    count_pieces(Color, Row, Count).
+
+
 steps_in_row(Color,Index, Count) :-
     Color = 1,
     count_in_row(1,Index,Count1),
@@ -159,36 +172,18 @@ steps_in_row(Color,Index, Count) :-
     count_in_row(2,Index,Count2),
     Count is Count2 - Count1.
 
-steps_in_diag(Color,Index, Count) :-
-    Color = 1,
-    count_in_diag(1,Index,Count1),
-    count_in_diag(2,Index,Count2),
-    format('count1(white) = ~w    count2 (blacks)= ~w',[Count1,Count2]),
-
-    Count is Count1 - Count2.
 
 
-steps_in_diag(Color,Index, Count) :-
-    Color = 2,
-    count_in_diag(1,Index,Count1),
-    count_in_diag(2,Index,Count2),
-    Count is Count2 - Count1.
+steps_in_diag_left(Color,I-J,Steps):-
+    initialstate(Board),
+    pieces_diagonal_left(I-J,List,Board),
+    count_pieces(Color,List,Steps).
 
-is_valid_position(I-J) :- between(0, 4, I), R is I+4-2*I, between(R, 8, J).
-is_valid_position(I-J) :- between(5, 8, I), L is 12-I, between(0, L, J).
-
-/**
- * between(+L, +R, ?I)
- * 
- * If I is binded, it checks if L =< I =< R.
- * If I is not binded, it is successively assigned
- * to the integers between L and R inclusive.
- */
- 
-between(L, R, I) :- ground(I), !, L =< I, I =< R.
-between(L, L, I) :- I is L, !.
-between(L, R, I) :- L < R, I is L.
-between(L, R, I) :- L < R, L1 is L+1, between(L1, R, I).
+steps_in_diag_right(Color,I-J,Steps):-
+    initialstate(Board),
+    pieces_diagonal_right(I-J,List,Board),
+    count_pieces(Color,List,Steps).
+    
 
 
 valid_move(Color,Ui-Uj, Vi-Vj) :- 
@@ -206,21 +201,6 @@ valid_move(Color,Ui-Uj, Vi-Vj) :-
     is_valid_position(Vi-Vj). %right
 
 %white_piece
-
-/* valid_move(1,Ui-Uj, Vi-Vj) :- 
-    is_valid_position(Ui-Uj),
-    steps_in_diag(1,Uj,Count), 
-    Vi is Ui - Count, 
-    Vj is Uj + Count,
-    is_valid_position(Vi-Vj). %up_right
-
-valid_move(1,Ui-Uj, Vi-Vj) :- 
-    is_valid_position(Ui-Uj),
-    steps_in_diag(1,Uj,Count), 
-    Vi is Ui - Count, 
-    Vj is Uj - Count,
-    is_valid_position(Vi-Vj). %up_left */
-
 valid_move(1,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
     steps_in_diag(1,Uj,Count),
@@ -386,4 +366,3 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
 
 
 
->>>>>>> 8e9a6b5a1d263d36d58df88bd3cbade9fcb9dd58
