@@ -196,13 +196,13 @@ steps_in_diag_right(Color,I-J,Steps):-
     count_pieces(OpColor,List,OtherColor),
     Steps is SameColor - OtherColor.
     
-
+%ROWS
 
 valid_move(Color,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
     steps_in_row(Color,Ui,Count), 
     Vi is Ui, 
-    Vj is Uj + Count,
+    Vj is Uj  +Count,
     is_valid_position(Vi-Vj). %right
 
 valid_move(Color,Ui-Uj, Vi-Vj) :- 
@@ -212,48 +212,41 @@ valid_move(Color,Ui-Uj, Vi-Vj) :-
     Vj is Uj - Count,
     is_valid_position(Vi-Vj). %right
 
-%white_piece
-valid_move(1,Ui-Uj, Vi-Vj) :- 
+%DIAGONALS
+
+%White pieces
+valid_move(1,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
-    steps_in_diag(1,Uj,Count),
-    Vi is Ui - Count, 
-    Vj is Uj + Count,
-    is_valid_position(Vi-Vj). %up_right
+    steps_in_diag_left(1,Ui-Uj,Steps),
+    Vi is Ui - Steps,
+    Vj is Uj.
 
-valid_move(1,Ui-Uj, Vi-Vj) :- 
+valid_move(1,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
-    steps_in_diag(1,Uj,Count), 
-    write(Count),
-    Vi is Ui - Count, 
-    Vj is Uj,
+    steps_in_diag_right(1,Ui-Uj,Steps),
+    Vi is Ui - Steps,
+    Vj is Uj + Steps.
 
-    is_valid_position(Vi-Vj). %up_left
-
-%black_piece
-
-valid_move(2,Ui-Uj, Vi-Vj) :- 
+%Black Pieces
+valid_move(2,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
-    steps_in_diag(2,Uj,Count), 
-    Vi is Ui + Count, 
-    Vj is Uj - Count,
-    is_valid_position(Vi-Vj). %below_right
+    steps_in_diag_left(1,Ui-Uj,Steps),
+    Vi is Ui - Steps,
+    Vj is Uj.
 
-valid_move(2,Ui-Uj, Vi-Vj) :-
+valid_move(2,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
-    steps_in_diag(2,Uj,Count), 
-    Vi is Ui + Count, 
-    Vj is Uj,
-    is_valid_position(Vi-Vj). %below_right
+    steps_in_diag_right(1,Ui-Uj,Steps),
+    Vi is Ui - Steps,
+    Vj is Uj + Steps.
 
 
-
-
-%get diagonals lists
 get_bottom_left(8-J, 8-J).
-get_bottom_left(I-0,I-0).
-
+get_bottom_left(I-0, I-0).
 
 get_bottom_left(I-J, N-M) :-
+    I > 0,
+    J > 0,
     N1 is I + 1,
     M1 is J - 1,
     get_bottom_left(N1-M1, N-M).
