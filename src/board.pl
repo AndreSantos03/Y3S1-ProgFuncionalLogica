@@ -77,6 +77,10 @@ count_occurrences(Item, List, Count) :-
     include(==(Item), List, Filtered),
     length(Filtered, Count).
 
+%to get the other color
+other_color(1,2).
+other_color(2,1).
+
 print_spaces(0).
 
 print_spaces(N) :- 
@@ -173,16 +177,24 @@ steps_in_row(Color,Index, Count) :-
     Count is Count2 - Count1.
 
 
-
+%The left diagonal is the diagonal that keeps the same I
 steps_in_diag_left(Color,I-J,Steps):-
     initialstate(Board),
-    pieces_diagonal_left(I-J,List,Board),
-    count_pieces(Color,List,Steps).
+    pieces_diagonal_left(8-J,List,Board),
+    count_pieces(Color,List,SameColor),
+    other_color(Color,OpColor),
+    count_pieces(OpColor,List,OtherColor),
+    Steps is SameColor - OtherColor.
 
+%The Other Diagonal
 steps_in_diag_right(Color,I-J,Steps):-
     initialstate(Board),
-    pieces_diagonal_right(I-J,List,Board),
-    count_pieces(Color,List,Steps).
+    get_bottom_left(I-J,NewI-NewJ),
+    pieces_diagonal_right(NewI-NewJ,List,Board),
+    count_pieces(Color,List,SameColor),
+    other_color(Color,OpColor),
+    count_pieces(OpColor,List,OtherColor),
+    Steps is SameColor - OtherColor.
     
 
 
@@ -246,11 +258,11 @@ get_bottom_left(I-J, N-M) :-
     M1 is J - 1,
     get_bottom_left(N1-M1, N-M).
 
-%gets both diagonals to count the pieces in either
+/* %gets both diagonals to count the pieces in either
 pieces_diagonal(I-J,List1,List2,Board):-
     pieces_diagonal_left(8-J,List1,Board),
     get_bottom_left(I-J,NewI-NewJ),
-    pieces_diagonal_right(NewI-NewJ,List2,Board).
+    pieces_diagonal_right(NewI-NewJ,List2,Board). */
 
 % Base case to stop the recursion when I or J are out of bounds
 pieces_diagonal_left(I-_, [], _) :- I < 0.
