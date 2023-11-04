@@ -1,9 +1,20 @@
 print_row(Row):-
     count_occurrences(3, Row, Count3),
-    AmountSpaces is 2 * Count3,
-    print_spaces(AmountSpaces),
-    print_middle_row(Row).
+    AmmountSpacesFirst is 2 * Count3,
+    AmmountSpacesSecond is Count3,
+    print_spaces(AmmountSpacesFirst),
+    print_middle_row(Row),
+    nl,
+    print_spaces(AmmountSpacesSecond),
+    length(Row,AmmountConnectors),
+    print_connectors(AmmountConnectors),
+    nl.
 
+print_connectors(0).
+print_connectors(AmmountConnectors):-
+    write('/\ '),
+    New is AmmountConnectors - 1.
+    print_connectors(AmmountConnector).
 print_spaces(0).
 
 print_spaces(N) :- 
@@ -49,9 +60,31 @@ print_board([]).
 
 print_board([Row|Rest]) :-
     print_row(Row),
-    put_char('\n'),
+
     print_board(Rest).
 
 print_initial_state :-
     initialstate(Board),
     print_board(Board).
+
+
+
+printMainMenu:-
+    nl,
+    format('\e[1;34m\e[5mWelcome to \e[1mDIFFERO\e[0m\e[1;34m!\e[0m\n', []).
+    nl,
+    write("--------------------"),
+    nl,
+    write('1.Player vs Player'),
+    write('2. Player vs Computer').
+    write("--------------------"),
+    nl.
+
+
+printComputerDifficulty:-
+    write("--------------------"),
+    nl,
+    write('1.Random Move'),
+    write('2. AI Computated Move').
+    write("--------------------"),
+    nl.
