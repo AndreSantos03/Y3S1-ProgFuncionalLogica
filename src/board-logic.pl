@@ -54,7 +54,7 @@ steps_in_row(Color,Index, Count) :-
 
 
 %The left diagonal is the diagonal that keeps the same I
-steps_in_diag_left(Color,I-J,Steps):-
+steps_in_diag_left(Color,_-J,Steps):-
     pieces_diagonal_left(8-J,List),
     count_pieces(Color,List,SameColor),
     other_color(Color,OpColor),

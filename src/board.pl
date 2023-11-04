@@ -100,10 +100,17 @@ move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
     update_board(Board, I, J, 0, TempBoard),
     update_board(TempBoard, I1, J1, Color, FinalBoard).
 
-move(Board,Color,  I-J, I1-J1, FinalBoard) :-
-    move_choice(Color, I-J, I1-J1),
-    move_board(Board,Color,I-J, I1-J1, FinalBoard).
 
+move(Board, FinalBoard) :-
+    move_choice(Color, I-J, I1-J1),
+    (valid_move(Color, I-J, I1-J1) ->
+        move_board(Board, Color, I-J, I1-J1, FinalBoard)
+    ;   write('The move you inputted was not valid!'), nl
+    ).
+
+is_empty(I-J):-
+    get_value(I-J,Value),
+    Value is 0.
 
 get_value(I-J, Value) :-
     initialstate(Board), % Load the board
