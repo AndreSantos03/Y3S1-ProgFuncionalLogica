@@ -36,11 +36,9 @@ count_pieces(Value, [First | Rest], Count) :-
     count_pieces(Value, Rest, Count).
 
 
-count_in_row(Color, Index, Count) :-
-    initialstate(Board),
-    nth0(Index, Board, Row),
-    count_pieces(Color, Row, Count).
-
+count_in_row(Color,Index,Count):-
+    get_row(Index,Row),
+    count_pieces(Color,Row,Count).
 
 steps_in_row(Color,Index, Count) :-
     Color = 1,
@@ -57,18 +55,18 @@ steps_in_row(Color,Index, Count) :-
 
 %The left diagonal is the diagonal that keeps the same I
 steps_in_diag_left(Color,I-J,Steps):-
-    initialstate(Board),
-    pieces_diagonal_left(8-J,List,Board),
+    pieces_diagonal_left(8-J,List),
     count_pieces(Color,List,SameColor),
     other_color(Color,OpColor),
     count_pieces(OpColor,List,OtherColor),
     Steps is SameColor - OtherColor.
+    
+
 
 %The Other Diagonal
 steps_in_diag_right(Color,I-J,Steps):-
-    initialstate(Board),
     get_bottom_left(I-J,NewI-NewJ),
-    pieces_diagonal_right(NewI-NewJ,List,Board),
+    pieces_diagonal_right(NewI-NewJ,List),
     count_pieces(Color,List,SameColor),
     other_color(Color,OpColor),
     count_pieces(OpColor,List,OtherColor),
@@ -129,36 +127,30 @@ get_bottom_left(I-J, N-M) :-
     M1 is J - 1,
     get_bottom_left(N1-M1, N-M).
 
-/* %gets both diagonals to count the pieces in either
-pieces_diagonal(I-J,List1,List2,Board):-
-    pieces_diagonal_left(8-J,List1,Board),
-    get_bottom_left(I-J,NewI-NewJ),
-    pieces_diagonal_right(NewI-NewJ,List2,Board). */
+
 
 % Base case to stop the recursion when I or J are out of bounds
-pieces_diagonal_left(I-_, [], _) :- I < 0.
+pieces_diagonal_left(I-_, []) :- I < 0.
 
-pieces_diagonal_left(I-J, List, Board) :-
+pieces_diagonal_left(I-J, List) :-
     I >= 0,
-    nth0(I, Board, ListAux),  
-    nth0(J, ListAux, Element),
+    get_value(I-J,Element),
     append([Element], NewList, List),  
     New_i is I - 1,
     New_j is J,
-    pieces_diagonal_left(New_i-New_j, NewList, Board).  
+    pieces_diagonal_left(New_i-New_j, NewList).  
 
 
 
 % Base case to stop the recursion when I or J are out of bounds
-pieces_diagonal_right(I-_, [], _) :- I < 0.
-pieces_diagonal_right(_-J, [], _) :- J > 8.
+pieces_diagonal_right(I-_, []) :- I < 0.
+pieces_diagonal_right(_-J, []) :- J > 8.
 
-pieces_diagonal_right(I-J, List, Board) :-
+pieces_diagonal_right(I-J, List) :-
     I >= 0,
     J =< 8,
-    nth0(I, Board, ListAux),  
-    nth0(J, ListAux, Element),
+    get_value(I-J,Element),
     append([Element], NewList, List),  
     New_i is I - 1,
     New_j is J + 1,    
-    pieces_diagonal_right(New_i-New_j, NewList, Board).
+    pieces_diagonal_right(New_i-New_j, NewList).
