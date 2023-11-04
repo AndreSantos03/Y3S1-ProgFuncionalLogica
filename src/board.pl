@@ -140,24 +140,14 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
     J1 is J - 1,
     update_row(Rest, J1, NewValue, UpdatedRest).
 
-/*
-is_game_over(I-J) :-
-    (I = 0; I = 8).
 
-play_game(Board, Color, FinalBoard) :-
-    write('Player '), write(Color), write('\'s turn:\n'),
-    move(Board, Color, I-J, I1-J1, TempBoard),
-    switch_color(Color, NextColor),
-    (is_game_over(I1-J1) -> FinalBoard = TempBoard ; play_game(TempBoard, NextColor, FinalBoard)).
+is_game_over(0-_).
+is_game_over(_-0).
+
 
 % Custom predicate to switch the turn between players
 switch_color(1, 2).
 switch_color(2, 1).
-
-% Entry point for the game
-game(InitialBoard, FinalBoard) :-
-    play_game(InitialBoard, 1, FinalBoard).
-*/
 
 
 
