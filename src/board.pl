@@ -131,12 +131,12 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
     J > 0,
     J1 is J - 1,
     update_row(Rest, J1, NewValue, UpdatedRest).
-/*
 
 is_game_over(I-J) :-
     (I = 0; I = 8).
 
 play_game(Board, Color, FinalBoard) :-
+    print_board(Board),
     write('Player '), write(Color), write('\'s turn:\n'),
     move(Board, Color, I-J, I1-J1, TempBoard),
     switch_color(Color, NextColor),
@@ -148,6 +148,7 @@ switch_color(2, 1).
 
 % Entry point for the game
 game(InitialBoard, FinalBoard) :-
+    initialstate(InitialBoard),
     play_game(InitialBoard, 1, FinalBoard).
 
 */
