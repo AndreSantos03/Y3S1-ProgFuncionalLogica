@@ -104,11 +104,16 @@ move(Board,Color,  I-J, I1-J1, FinalBoard) :-
     move_choice(Color, I-J, I1-J1),
     move_board(Board,Color,I-J, I1-J1, FinalBoard).
 
+
 get_value(I-J, Value) :-
     initialstate(Board), % Load the board
     nth0(I, Board, Row), % Get the row at position I
     nth0(J, Row, Value). % Get the value at position J
-    
+
+get_row(I,Row):-
+    initialstate(Board),
+    nth0(I,Board,Row).
+
 update_board(Board, I, J, NewValue, NewBoard) :-
     update_cell(Board, I, J, NewValue, UpdatedBoard),
     NewBoard = UpdatedBoard.

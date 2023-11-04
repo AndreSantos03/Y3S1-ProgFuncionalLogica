@@ -4,10 +4,6 @@ print_row(Row):-
     print_spaces(AmountSpaces),
     print_middle_row(Row).
 
-count_occurrences(Item, List, Count) :-
-    include(==(Item), List, Filtered),
-    length(Filtered, Count).
-
 print_spaces(0).
 
 print_spaces(N) :- 
