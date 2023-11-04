@@ -1,5 +1,4 @@
 :-use_module(library(lists)).
-:-consult(board-logic.pl).
 
 
 /**                   
@@ -83,16 +82,16 @@ read_coordinates(I-J) :-
 get_base_coordinates(Color, I-J) :-
     write('Enter the coordinates (I-J) from where you want to move your piece: '),
     read_coordinates(I-J),
-    get_value(Board,I-J,Color),
+    get_value(I-J,Color),
     is_valid_position(I-J).
 
 get_target_coordinates(I-J) :-
     write('Enter the coordinates (I-J) to where you want to move your piece: '),
     read_coordinates(I-J),
-    is_empty(Board,I-J),
+    is_empty(I-J),
     is_valid_position(I-J).
 
-move_choice(Board,Color, I-J, I1-J1) :-
+move_choice(Color, I-J, I1-J1) :-
     get_base_coordinates(Color, I-J),
     get_target_coordinates(I1-J1).
     %valid_move(Color,I-J,I1-J1).
@@ -101,18 +100,27 @@ move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
     update_board(Board, I, J, 0, TempBoard),
     update_board(TempBoard, I1, J1, Color, FinalBoard).
 
-move(Board,Color,  I-J, I1-J1, FinalBoard) :-
-    move_choice(Board,Color, I-J, I1-J1),
-    move_board(Board,Color,I-J, I1-J1, FinalBoard).
 
-is_empty(Board,I-J) :-
-    get_value(Board,I-J,0).
+move(Board, FinalBoard) :-
+    move_choice(Color, I-J, I1-J1),
+    (valid_move(Color, I-J, I1-J1) ->
+        move_board(Board, Color, I-J, I1-J1, FinalBoard)
+    ;   write('The move you inputted was not valid!'), nl
+    ).
 
-get_value(Board,I-J, Value) :-
-    % Load the board
+is_empty(I-J):-
+    get_value(I-J,Value),
+    Value is 0.
+
+get_value(I-J, Value) :-
+    initialstate(Board), % Load the board
     nth0(I, Board, Row), % Get the row at position I
     nth0(J, Row, Value). % Get the value at position J
-    
+
+get_row(I,Row):-
+    initialstate(Board),
+    nth0(I,Board,Row).
+
 update_board(Board, I, J, NewValue, NewBoard) :-
     update_cell(Board, I, J, NewValue, UpdatedBoard),
     NewBoard = UpdatedBoard.
@@ -132,11 +140,11 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
     J1 is J - 1,
     update_row(Rest, J1, NewValue, UpdatedRest).
 
+/*
 is_game_over(I-J) :-
     (I = 0; I = 8).
 
 play_game(Board, Color, FinalBoard) :-
-    print_board(Board),
     write('Player '), write(Color), write('\'s turn:\n'),
     move(Board, Color, I-J, I1-J1, TempBoard),
     switch_color(Color, NextColor),
@@ -148,11 +156,8 @@ switch_color(2, 1).
 
 % Entry point for the game
 game(InitialBoard, FinalBoard) :-
-    initialstate(InitialBoard),
     play_game(InitialBoard, 1, FinalBoard).
-
 */
-
 
 
 
