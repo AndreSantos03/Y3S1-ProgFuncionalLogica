@@ -1,4 +1,5 @@
 :-use_module(library(lists)).
+:-consult(board-logic.pl).
 
 
 /**                   
@@ -82,16 +83,16 @@ read_coordinates(I-J) :-
 get_base_coordinates(Color, I-J) :-
     write('Enter the coordinates (I-J) from where you want to move your piece: '),
     read_coordinates(I-J),
-    get_value(I-J,Color),
+    get_value(Board,I-J,Color),
     is_valid_position(I-J).
 
 get_target_coordinates(I-J) :-
     write('Enter the coordinates (I-J) to where you want to move your piece: '),
     read_coordinates(I-J),
-    is_empty(I-J),
+    is_empty(Board,I-J),
     is_valid_position(I-J).
 
-move_choice(Color, I-J, I1-J1) :-
+move_choice(Board,Color, I-J, I1-J1) :-
     get_base_coordinates(Color, I-J),
     get_target_coordinates(I1-J1).
     %valid_move(Color,I-J,I1-J1).
@@ -101,11 +102,14 @@ move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
     update_board(TempBoard, I1, J1, Color, FinalBoard).
 
 move(Board,Color,  I-J, I1-J1, FinalBoard) :-
-    move_choice(Color, I-J, I1-J1),
+    move_choice(Board,Color, I-J, I1-J1),
     move_board(Board,Color,I-J, I1-J1, FinalBoard).
 
-get_value(I-J, Value) :-
-    initialstate(Board), % Load the board
+is_empty(Board,I-J) :-
+    get_value(Board,I-J,0).
+
+get_value(Board,I-J, Value) :-
+    % Load the board
     nth0(I, Board, Row), % Get the row at position I
     nth0(J, Row, Value). % Get the value at position J
     
@@ -127,8 +131,8 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
     J > 0,
     J1 is J - 1,
     update_row(Rest, J1, NewValue, UpdatedRest).
-
 /*
+
 is_game_over(I-J) :-
     (I = 0; I = 8).
 
@@ -145,7 +149,9 @@ switch_color(2, 1).
 % Entry point for the game
 game(InitialBoard, FinalBoard) :-
     play_game(InitialBoard, 1, FinalBoard).
+
 */
+
 
 
 

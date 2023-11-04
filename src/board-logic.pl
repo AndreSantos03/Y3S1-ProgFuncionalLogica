@@ -36,28 +36,26 @@ count_pieces(Value, [First | Rest], Count) :-
     count_pieces(Value, Rest, Count).
 
 
-count_in_row(Color, Index, Count) :-
-    initialstate(Board),
+count_in_row(Board, Color, Index, Count) :-
     nth0(Index, Board, Row),
     count_pieces(Color, Row, Count).
 
 
-steps_in_row(Color,Index, Count) :-
+steps_in_row(Board,Color,Index, Count) :-
     Color = 1,
-    count_in_row(1,Index,Count1),
-    count_in_row(2,Index,Count2),
+    count_in_row(Board,1,Index,Count1),
+    count_in_row(Board,2,Index,Count2),
     Count is Count1 - Count2.
 
-steps_in_row(Color,Index, Count) :-
+steps_in_row(Board,Color,Index, Count) :-
     Color = 2,
-    count_in_row(1,Index,Count1),
-    count_in_row(2,Index,Count2),
+    count_in_row(Board,1,Index,Count1),
+    count_in_row(Board,2,Index,Count2),
     Count is Count2 - Count1.
 
 
 %The left diagonal is the diagonal that keeps the same I
-steps_in_diag_left(Color,I-J,Steps):-
-    initialstate(Board),
+steps_in_diag_left(Board,Color,I-J,Steps):-
     pieces_diagonal_left(8-J,List,Board),
     count_pieces(Color,List,SameColor),
     other_color(Color,OpColor),
@@ -65,8 +63,8 @@ steps_in_diag_left(Color,I-J,Steps):-
     Steps is SameColor - OtherColor.
 
 %The Other Diagonal
-steps_in_diag_right(Color,I-J,Steps):-
-    initialstate(Board),
+steps_in_diag_right(Board, Color,I-J,Steps):-
+
     get_bottom_left(I-J,NewI-NewJ),
     pieces_diagonal_right(NewI-NewJ,List,Board),
     count_pieces(Color,List,SameColor),
@@ -76,16 +74,16 @@ steps_in_diag_right(Color,I-J,Steps):-
     
 %ROWS
 
-valid_move(Color,Ui-Uj, Vi-Vj) :- 
+valid_move(Board,Color,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
-    steps_in_row(Color,Ui,Count), 
+    steps_in_row(Board,Color,Ui,Count), 
     Vi is Ui, 
     Vj is Uj  +Count,
     is_valid_position(Vi-Vj). %right
 
-valid_move(Color,Ui-Uj, Vi-Vj) :- 
+valid_move(Board,Color,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
-    steps_in_row(Color,Ui,Count), 
+    steps_in_row(Board,Color,Ui,Count), 
     Vi is Ui, 
     Vj is Uj - Count,
     is_valid_position(Vi-Vj). %right
@@ -93,28 +91,28 @@ valid_move(Color,Ui-Uj, Vi-Vj) :-
 %DIAGONALS
 
 %White pieces
-valid_move(1,Ui-Uj,Vi-Vj):-
+valid_move(Board,1,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
-    steps_in_diag_left(1,Ui-Uj,Steps),
+    steps_in_diag_left(Board,1,Ui-Uj,Steps),
     Vi is Ui - Steps,
     Vj is Uj.
 
-valid_move(1,Ui-Uj,Vi-Vj):-
+valid_move(Board,1,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
-    steps_in_diag_right(1,Ui-Uj,Steps),
+    steps_in_diag_right(Board,1,Ui-Uj,Steps),
     Vi is Ui - Steps,
     Vj is Uj + Steps.
 
 %Black Pieces
-valid_move(2,Ui-Uj,Vi-Vj):-
+valid_move(Board,2,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
-    steps_in_diag_left(1,Ui-Uj,Steps),
+    steps_in_diag_left(Board,1,Ui-Uj,Steps),
     Vi is Ui - Steps,
     Vj is Uj.
 
-valid_move(2,Ui-Uj,Vi-Vj):-
+valid_move(Board,2,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
-    steps_in_diag_right(1,Ui-Uj,Steps),
+    steps_in_diag_right(Board,1,Ui-Uj,Steps),
     Vi is Ui - Steps,
     Vj is Uj + Steps.
 
