@@ -124,34 +124,6 @@ print_js(AmmountJs,Counter):-
     print_js(NewJs,NewCounter).
     
 
-
-%%DEBUG TO REMOVE WHEN ACTUALLY DELIVERED
-print_initial_state :-
-    initialstate(Board),
-    print_board(Board).
-
-
-
-printMainMenu:-
-    nl,
-    format('\e[1;34m\e[5mWelcome to \e[1mDIFFERO\e[0m\e[1;34m!\e[0m\n', []),
-    nl,
-    write("--------------------"),
-    nl,
-    write('1.Player vs Player'),
-    write('2. Player vs Computer'),
-    write("--------------------"),
-    nl.
-
-
-printComputerDifficulty:-
-    write("--------------------"),
-    nl,
-    write('1.Random Move'),
-    write('2. AI Computated Move'),
-    write("--------------------"),
-    nl.
-
 print_available_moves(AvailableMoves):-
     nl,
     write('Here are the following available moves:'),
@@ -164,3 +136,9 @@ print_available_moves_inner([[StartPos, TargetPos] | Rest]):-
     format("-Move from ~w to ~w", [StartPos, TargetPos]),
     nl,
     print_available_moves_inner(Rest).
+
+
+
+test:-
+    initialstate(Board),
+    print_board(Board).
