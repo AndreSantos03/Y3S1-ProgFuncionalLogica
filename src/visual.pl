@@ -21,7 +21,7 @@ print_board([Row|Rest]) :-
 print_row(Row,I):-
     count_occurrences(3, Row, Count3),
     AmmountSpaces1 is 2 * Count3,
-    (Count3 > 0 -> AmmountSpaces2 is AmmountSpaces1 - 1 ; AmmountSpaces2 is 0), %when we're in the middle of the Board for example!
+    AmmountSpaces2 is AmmountSpaces1 - 1,
     format('i = ~w',I),
     put_code(9),%tab!
     print_spaces(AmmountSpaces1),
@@ -29,18 +29,25 @@ print_row(Row,I):-
     length(Row,SizeRow),
     AmmountConnectors is SizeRow - Count3,
     nth0(0,Row,First), %gets the first character, if its not a 3 then we invert the connectors!
+    nl,
+    put_code(9),
     print_connectors(First,AmmountConnectors,AmmountSpaces2),
     nl.
 
 print_row_last(Row,I):-
     count_occurrences(3, Row, Count3),
+    length(Row,SizeRow),
+    AmmountJs is SizeRow - Count3,
     AmmountSpaces1 is 2 * Count3,
     format('i = ~w',I),
     put_code(9),%tab!
-
     print_spaces(AmmountSpaces1),
     print_middle_row(Row),
-    nl.
+    nl,
+    put_code(9),%tab!
+    AmmountSpaces2 is AmmountSpaces1 -1,
+    print_spaces(AmmountSpaces2),
+    print_js(AmmountJs,0).
 
 print_middle_row([]).
 
@@ -77,67 +84,40 @@ print_middle_row([3|Rest]):-
 
 
 
-/* %when the first element is 3, then we're in the first half of the bird,
-print_connectors(3,AmmountConnectors,AmmountSpaces) :-
-    nl,
-    put_code(9),
+print_connectors(3, AmmountConnectors,AmmountSpaces) :-
     print_spaces(AmmountSpaces),
     AmmountConnectors > 0,
     write('/ \\ '),
     New is AmmountConnectors - 1,
-    print_connectors_inner(3,New).
-print_connectors_inner(3,0).
-print_connectors_inner(3,AmmountConnectors) :-
-    AmmountConnectors > 0,
-    write('\\ / '),
-    New is AmmountConnectors - 1,
-    print_connectors_inner(3,New).
+    print_connectors_inner(New, 3,0).
 
-
-
-%to compensate for the fact that the first of each line has an extra space!
-print_connectors(_,AmmountConnectors,AmmountSpaces) :-
-    write('   \\'),
-    nl,
-    put_code(9),
-    print_spaces(AmmountSpaces),
+print_connectors(_, AmmountConnectors,AmmountSpaces) :-
+    AmSpaces is AmmountSpaces + 1,
+    print_spaces(AmSpaces),
     AmmountConnectors > 0,
     write(' \\ / '),
     New is AmmountConnectors - 2,
-    print_connectors_inner(0,New).
-print_connectors_inner(0,0).
-print_connectors_inner(0,AmmountConnectors) :-
-    AmmountConnectors > 0,
-    write('\\ / '),
-    New is AmmountConnectors - 1,
-    print_connectors_inner(0,New). */
+    print_connectors_inner(New, 0,AmmountConnectors).
 
-print_connectors(3, AmmountConnectors, AmmountSpaces) :-
-    nl,
-    put_code(9),
-    print_spaces(AmmountSpaces),
-    AmmountConnectors > 0,
-    write('/ \\ '),
-    New is AmmountConnectors - 1,
-    print_connectors_inner(New, 3).
+print_connectors_inner(0,0,J):-
+    format('j=~d',J).
 
-print_connectors(_, AmmountConnectors, AmmountSpaces) :-
-    write('   \\'),
-    nl,
-    put_code(9),
-    print_spaces(AmmountSpaces),
-    AmmountConnectors > 0,
-    write(' \\ / '),
-    New is AmmountConnectors - 2,
-    print_connectors_inner(New, 0).
-
-print_connectors_inner(0, _).
-print_connectors_inner(AmmountConnectors, First) :-
+print_connectors_inner(0, _,_).
+print_connectors_inner(AmmountConnectors, First,J) :-
     AmmountConnectors > 0,
     (First = 3 -> write('/ \\ '); write('\\ / ')),
     New is AmmountConnectors - 1,
-    print_connectors_inner(New, First).
+    print_connectors_inner(New, First,J).
 
+print_js(0,_).
+
+print_js(AmmountJs,Counter):-
+    AmmountJs > 0,
+    format('j=~d|',Counter),
+    NewJs is AmmountJs -1,
+    NewCounter is Counter + 1,
+    print_js(NewJs,NewCounter).
+    
 
 
 %%DEBUG TO REMOVE WHEN ACTUALLY DELIVERED
