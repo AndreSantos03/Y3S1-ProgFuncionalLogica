@@ -154,3 +154,12 @@ pieces_diagonal_right(I-J, List) :-
     New_i is I - 1,
     New_j is J + 1,    
     pieces_diagonal_right(New_i-New_j, NewList).
+
+
+get_available_moves(Board, Color, AvailableMoves) :-
+    findall([I-J, I1-J1], (between(0, 8, I), between(0, 8, J), get_value(I-J, Color), find_valid_moves(Board, Color, I-J, I1-J1)), AvailableMoves).
+
+find_valid_moves(Board, Color, I-J, I1-J1) :-
+    valid_move(Color, I-J, I1-J1),
+    is_empty(I1-J1),
+    is_valid_position(I1-J1).

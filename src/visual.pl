@@ -97,7 +97,8 @@ print_connectors(_, AmmountConnectors,AmmountSpaces) :-
     AmmountConnectors > 0,
     write(' \\ / '),
     New is AmmountConnectors - 2,
-    print_connectors_inner(New, 0,AmmountConnectors).
+    CounterJ is AmmountConnectors - 1,
+    print_connectors_inner(New, 0,CounterJ).
 
 print_connectors_inner(0,0,J):-
     format('j=~d',J).
