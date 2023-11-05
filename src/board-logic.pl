@@ -112,15 +112,15 @@ valid_move(2,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
     steps_in_diag_left(1,Ui-Uj,Steps),
     Steps > 0,
-    Vi is Ui - Steps,
+    Vi is Ui + Steps,
     Vj is Uj.
 
 valid_move(2,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps),
     Steps > 0,
-    Vi is Ui - Steps,
-    Vj is Uj + Steps.
+    Vi is Ui + Steps,
+    Vj is Uj - Steps.
 
 
 get_bottom_left(8-J, 8-J).
