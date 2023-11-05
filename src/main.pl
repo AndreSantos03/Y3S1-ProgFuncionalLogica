@@ -17,12 +17,17 @@ game(InitialBoard, FinalBoard) :-
     play_game(InitialBoard, 1, FinalBoard).
 
 
-play_game(Board, Color, FinalBoard) :-
+play_game(Board, Color) :-
     print_board(Board),
-    get_available_moves(Board,Color,AvailableMoves),
-    print_available_moves(AvailableMoves),
     write('Player '), write(Color), write('\'s turn:\n'),
-    move(Board, TempBoard,I1-J1),
-    switch_color(Color, NextColor),
-    (is_game_over(I1-J1) -> FinalBoard = TempBoard ; play_game(TempBoard, NextColor, FinalBoard)).
+    (has_available_moves(Board, Color, AvailableMoves) ->
+        get_available_moves(Board, Color, AvailableMoves),
+        print_available_moves(AvailableMoves),
+        move(Board, Color, TempBoard),
+        switch_color(Color, NextColor),
+        (reach_goal(TempBoard, Color) -> game_over(TempBoard, Winner) ; play_game(TempBoard, NextColor))
+    ;
+        game_over(Board, Winner)
+    ).
+
     
