@@ -94,14 +94,13 @@ get_target_coordinates(I-J) :-
 move_choice(Color, I-J, I1-J1) :-
     get_base_coordinates(Color, I-J),
     get_target_coordinates(I1-J1).
-    %valid_move(Color,I-J,I1-J1).
 
 move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
     update_board(Board, I, J, 0, TempBoard),
     update_board(TempBoard, I1, J1, Color, FinalBoard).
 
 
-move(Board, FinalBoard,I1-J1) :-
+move(Board, Color,FinalBoard) :-
     move_choice(Color, I-J, I1-J1),
     (valid_move(Color, I-J, I1-J1) ->
         move_board(Board, Color, I-J, I1-J1, FinalBoard)
@@ -141,8 +140,26 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
     update_row(Rest, J1, NewValue, UpdatedRest).
 
 
-is_game_over(0-_).
-is_game_over(_-0).
+has_available_moves(Board, Color, AvailableMoves) :-
+    get_available_moves(Board, Color, AvailableMoves),
+    AvailableMoves \= [].
+
+reach_goal(1, Board) :-
+    % Check the first row (top edge)
+    nth0(0, Board, FirstRow),
+    member(1, FirstRow).
+
+reach_goal(2, Board) :-
+    nth0(8, Board, LastRow),
+    member(2, LastRow).
+
+game_over(Board,Winner) :-
+    (reach_goal(Winner, Board);
+    Winner = 1,
+    \+ has_availableMoves(Board, 2, AvailableMoves);
+    Winner = 2,
+    \+ has_availableMoves(Board, 1, AvailableMoves)),
+    write('Player '), write(Color), write('is the winner.\n').
 
 
 % Custom predicate to switch the turn between players
