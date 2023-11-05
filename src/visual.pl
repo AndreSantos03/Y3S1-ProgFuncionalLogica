@@ -6,16 +6,19 @@ print_spaces(N) :-
     print_spaces(N1).
 
 
-print_board([]).
+print_board([],_).
 
-print_board([Row]):-
-    print_row_last(Row,0).
+print_board([Row],I):-
+    print_row_last(Row,I).
 
-print_board([Row|Rest]) :-
+print_board(Board):-
+    print_board(Board,0). %To Start up the I counter
+
+print_board([Row|Rest],I) :-
     length(Rest,SizeRest),
-    I is SizeRest,
+    NewI is I + 1,
     print_row(Row,I),
-    print_board(Rest).
+    print_board(Rest,NewI).
 
 
 print_row(Row,I):-
