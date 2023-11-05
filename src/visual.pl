@@ -50,7 +50,8 @@ print_row_last(Row,I):-
     put_code(9),%tab!
     AmmountSpaces2 is AmmountSpaces1 -1,
     print_spaces(AmmountSpaces2),
-    print_js(AmmountJs,0).
+    print_js(AmmountJs,0),
+    nl.
 
 print_middle_row([]).
 
@@ -150,3 +151,16 @@ printComputerDifficulty:-
     write('2. AI Computated Move').
     write("--------------------"),
     nl.
+
+print_available_moves(AvailableMoves):-
+    nl,
+    write('Here are the following available moves:'),
+    nl,
+    print_available_moves_inner(AvailableMoves).
+
+print_available_moves_inner([]).
+print_available_moves_inner([[StartPos, TargetPos] | Rest]):-
+    put_code(9),
+    format("-Move from ~w to ~w", [StartPos, TargetPos]),
+    nl,
+    print_available_moves_inner(Rest).

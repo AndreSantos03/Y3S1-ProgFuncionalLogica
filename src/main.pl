@@ -20,6 +20,7 @@ game(InitialBoard, FinalBoard) :-
 play_game(Board, Color, FinalBoard) :-
     print_board(Board),
     get_available_moves(Board,Color,AvailableMoves),
+    print_available_moves(AvailableMoves).
     write(AvailableMoves),
     write('Player '), write(Color), write('\'s turn:\n'),
     move(Board, TempBoard,I1-J1),
