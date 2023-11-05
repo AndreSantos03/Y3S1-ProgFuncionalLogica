@@ -6,13 +6,13 @@ print_spaces(N) :-
     print_spaces(N1).
 
 
+print_board(Board):-
+    print_board(Board,0). %To Start up the I counter
+
 print_board([],_).
 
 print_board([Row],I):-
     print_row_last(Row,I).
-
-print_board(Board):-
-    print_board(Board,0). %To Start up the I counter
 
 print_board([Row|Rest],I) :-
     length(Rest,SizeRest),
@@ -134,12 +134,12 @@ print_initial_state :-
 
 printMainMenu:-
     nl,
-    format('\e[1;34m\e[5mWelcome to \e[1mDIFFERO\e[0m\e[1;34m!\e[0m\n', []).
+    format('\e[1;34m\e[5mWelcome to \e[1mDIFFERO\e[0m\e[1;34m!\e[0m\n', []),
     nl,
     write("--------------------"),
     nl,
     write('1.Player vs Player'),
-    write('2. Player vs Computer').
+    write('2. Player vs Computer'),
     write("--------------------"),
     nl.
 
@@ -148,7 +148,7 @@ printComputerDifficulty:-
     write("--------------------"),
     nl,
     write('1.Random Move'),
-    write('2. AI Computated Move').
+    write('2. AI Computated Move'),
     write("--------------------"),
     nl.
 

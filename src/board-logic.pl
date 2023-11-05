@@ -77,6 +77,7 @@ steps_in_diag_right(Color,I-J,Steps):-
 valid_move(Color,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
     steps_in_row(Color,Ui,Count), 
+    Count > 0,
     Vi is Ui, 
     Vj is Uj  +Count,
     is_valid_position(Vi-Vj). %right
@@ -84,6 +85,7 @@ valid_move(Color,Ui-Uj, Vi-Vj) :-
 valid_move(Color,Ui-Uj, Vi-Vj) :- 
     is_valid_position(Ui-Uj),
     steps_in_row(Color,Ui,Count), 
+    Count > 0,
     Vi is Ui, 
     Vj is Uj - Count,
     is_valid_position(Vi-Vj). %right
@@ -94,12 +96,14 @@ valid_move(Color,Ui-Uj, Vi-Vj) :-
 valid_move(1,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
     steps_in_diag_left(1,Ui-Uj,Steps),
+    Steps > 0,
     Vi is Ui - Steps,
     Vj is Uj.
 
 valid_move(1,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps),
+    Steps > 0,
     Vi is Ui - Steps,
     Vj is Uj + Steps.
 
@@ -107,12 +111,14 @@ valid_move(1,Ui-Uj,Vi-Vj):-
 valid_move(2,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
     steps_in_diag_left(1,Ui-Uj,Steps),
+    Steps > 0,
     Vi is Ui - Steps,
     Vj is Uj.
 
 valid_move(2,Ui-Uj,Vi-Vj):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps),
+    Steps > 0,
     Vi is Ui - Steps,
     Vj is Uj + Steps.
 
