@@ -10,7 +10,7 @@ play :-
 start_menu:-
     printMainMenu,
     initialstate(Board),
-    game(InitialBoard,FinalBoard).
+    game(Board,FinalBoard).
 
 % Entry point for the game
 game(InitialBoard, FinalBoard) :-
@@ -18,8 +18,9 @@ game(InitialBoard, FinalBoard) :-
 
 
 play_game(Board, Color, FinalBoard) :-
+    print_board(Board),
     write('Player '), write(Color), write('\'s turn:\n'),
-    move(Board, TempBoard),
+    move(Board, TempBoard,I1-J1),
     switch_color(Color, NextColor),
     (is_game_over(I1-J1) -> FinalBoard = TempBoard ; play_game(TempBoard, NextColor, FinalBoard)).
     

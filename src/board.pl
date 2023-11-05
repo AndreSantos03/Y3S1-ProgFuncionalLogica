@@ -18,7 +18,7 @@
  *                  \ / \ / \ / \ / \ / \ / \   \   \ 
  * i = 7   H         o---o---o---o---o---o   \   \   \
  *                    \ / \ / \ / \ / \ / \   \   \   \
- * i = 8   I          o---o---o---o---o   \   \   \   \
+ * i = 8   I          o---o---o---o---o    \   \   \   \
  *                      \   \   \   \   \   \   \   \   \
  *                       1   2   3   4   5   6   7   8   9
  * 
@@ -101,7 +101,7 @@ move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
     update_board(TempBoard, I1, J1, Color, FinalBoard).
 
 
-move(Board, FinalBoard) :-
+move(Board, FinalBoard,I1-J1) :-
     move_choice(Color, I-J, I1-J1),
     (valid_move(Color, I-J, I1-J1) ->
         move_board(Board, Color, I-J, I1-J1, FinalBoard)
