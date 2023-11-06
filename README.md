@@ -52,6 +52,30 @@ The pieces and empty positions are represented in the following way:
   - Black piece: ``` 2 ```
   - empty space: ``` 0 ```
 
+```shell
+  i = 0   A           o---o---o---o---o
+                     / \ / \ / \ / \ / \ 
+  i = 1   B         o---B---B---B---B---o
+                   / \ / \ / \ / \ / \ / \ 
+  i = 2   C       o---B---o---B---o---B---o
+                 / \ / \ / \ / \ / \ / \ / \
+  i = 3   D     o---B---B---B---B---B---B---o
+               / \ / \ / \ / \ / \ / \ / \ / \
+  i = 4   E   o---o---o---o---o---o---o---o---o
+               \ / \ / \ / \ / \ / \ / \ / \ / \
+  i = 5   F     o---W---W---W---W---W---W---o   \
+                 \ / \ / \ / \ / \ / \ / \ / \   \
+  i = 6   G       o---W---o---W---o---W---o   \   \
+                   \ / \ / \ / \ / \ / \ / \   \   \ 
+  i = 7   H         o---W---W---W---W---o   \   \   \
+                     \ / \ / \ / \ / \ / \   \   \   \
+  i = 8   I          o---o---o---o---o    \   \   \   \
+                       \   \   \   \   \   \   \   \   \
+                        1   2   3   4   5   6   7   8   9
+  
+                       j=0 j=1 j=2 j=3 j=4 j=5 j=6 j=7 j=8
+```
+
 #### Initial State
 ```shell
 initialstate([ % Board
@@ -87,7 +111,9 @@ intermediatestate([ % Board
 
 ### Game State Visualization
 
-#### Menu
+Starting the game, we can see the start menu:
+
+#### Menus
 
 #### Board
 
@@ -119,25 +145,13 @@ We also require users to specify which piece they want to move and where they wa
 
 ### Move Validation and Execution
 
-# Directions
+#### Valid moves
 
-Pieces can move along the lines in six directions, as shown below.
-
-``` shell
-    5   3
-     \ /
-1  ---o--- 2
-     / \
-    4   6
-```
-
-# Valid moves
-
-We verify if the move given by the player is valid using the predicate ''' valid_move(Color,Ui-Uj,Vi-Vj) '''
+We verify if the move given by the player is valid using the predicate ``` valid_move(Color,Ui-Uj,Vi-Vj) ```
 
 The piece can move a number of steps equal to the difference between the count of the player's color pieces and the count of the opponent's color pieces along the line. This envolves count the ocorrence of the value of the player's color piece and the ocorrence of the value of the player's oponent's color piece in that line and calculating the subtraction.
 
-Creating a list with elements of that line we can use count_pieces
+Creating a list with elements of that line, we can use ``` count_pieces/3 ``` to count the occurrence of that color's piece.
 
 ``` shell
 count_pieces(_,[],0).
@@ -148,6 +162,35 @@ count_pieces(Value, [First | Rest], Count) :-
     First =\= Value,
     count_pieces(Value, Rest, Count).
 ```
+##### Directions
+
+Pieces can move along the lines in six directions, as shown below.
+
+``` shell
+    5   3
+     \ /
+1  ---o--- 2
+     / \
+    4   6
+```
+This prompts the need to have different methods for creating the list for the different directions. 
+Example of the directions 5 and 6 below.
+
+#### Move Execution
+
+After the move choice, we call move_board that removes the piece from the base coordinates and adds the piece in the target coordinates
+
+#### List of valid Moves
+
+As seen before, we give the user the list of all valid moves.
+
+#### End of Game
+
+The predicate game_over(+GameState, +Winner) analyzes the provided game state and determines whether the game has indeed ended. It checks if the winner has reached the goal or if the loser has no valid moves remaining.
+
+#### Evalution
+ 
+
 
 
 
