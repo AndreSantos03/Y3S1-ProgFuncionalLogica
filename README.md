@@ -119,25 +119,13 @@ We also require users to specify which piece they want to move and where they wa
 
 ### Move Validation and Execution
 
-# Directions
+#### Valid moves
 
-Pieces can move along the lines in six directions, as shown below.
-
-``` shell
-    5   3
-     \ /
-1  ---o--- 2
-     / \
-    4   6
-```
-
-# Valid moves
-
-We verify if the move given by the player is valid using the predicate ''' valid_move(Color,Ui-Uj,Vi-Vj) '''
+We verify if the move given by the player is valid using the predicate ``` valid_move(Color,Ui-Uj,Vi-Vj) ```
 
 The piece can move a number of steps equal to the difference between the count of the player's color pieces and the count of the opponent's color pieces along the line. This envolves count the ocorrence of the value of the player's color piece and the ocorrence of the value of the player's oponent's color piece in that line and calculating the subtraction.
 
-Creating a list with elements of that line we can use count_pieces
+Creating a list with elements of that line, we can use count_pieces(Color, Line, Count) to count the occurrence of that color's piece.
 
 ``` shell
 count_pieces(_,[],0).
@@ -148,6 +136,29 @@ count_pieces(Value, [First | Rest], Count) :-
     First =\= Value,
     count_pieces(Value, Rest, Count).
 ```
+#### Directions
+
+Pieces can move along the lines in six directions, as shown below.
+
+``` shell
+    5   3
+     \ /
+1  ---o--- 2
+     / \
+    4   6
+```
+This prompts the need to have different methods for creating the list for the different directions. 
+Example of the directions 5 and 6 below.
+
+### Move Execution
+
+After the move choice we call move_board that
+
+
+
+
+ 
+
 
 
 
