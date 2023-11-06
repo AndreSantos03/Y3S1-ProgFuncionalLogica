@@ -47,6 +47,11 @@ The player can only move one of their pieces in their turn, acording to the foll
 The board is internally represented as a list of lists. Because our game has the pieces in prediminated positions we create a initialstate list and work from there. 
 Some positions are not valid (e.g. (1, 1)), which can be checked by calling board_is_valid_position(I-J). 
 
+The pieces and empty positions are represented in the following way:
+  - White piece: ``` 1 ```
+  - Black piece: ``` 2 ```
+  - empty space: ``` 0 ```
+
 #### Initial State
 ```shell
 initialstate([ % Board
@@ -95,26 +100,54 @@ The pieces and empty positions are represented in the following way:
 
 Here you can see the initial board:
 
-For this we iterate through through the game state considering the different scenarios (Is the position in the middle? Is the last position of the row? (we don't want --- after it) Is the last row?)
+For this we iterate through the game state considering the different scenarios (Is the position in the middle? Is the last position of the row? (we don't want --- after it) Is the last row?)
 
 #### User interation
 
 Throughout the game, players will receive the necessary instructions to enhance the game's intuitiveness. 
 
-We will inform you about the winner when the game is over, 
+We will inform the users about the winner when the game is over, 
 ```shell
 write('Player '), write(Color), write('is the winner.\n').
 ```
 
 whose turn it is, 
 
-and display your valid moves.
+and display player's valid moves to make easy for them know all the options they have.
 
-To int
+We also require users to specify which piece they want to move and where they want to place it. To facilitate this, we ask for base and then target coordinates in the format (I-J), and users provide both I and J separately
 
 ### Move Validation and Execution
 
+# Directions
 
+Pieces can move along the lines in six directions, as shown below.
+
+``` shell
+    5   3
+     \ /
+1  ---o--- 2
+     / \
+    4   6
+```
+
+# Valid moves
+
+We verify if the move given by the player is valid using the predicate ''' valid_move(Color,Ui-Uj,Vi-Vj) '''
+
+The piece can move a number of steps equal to the difference between the count of the player's color pieces and the count of the opponent's color pieces along the line. This envolves count the ocorrence of the value of the player's color piece and the ocorrence of the value of the player's oponent's color piece in that line and calculating the subtraction.
+
+Creating a list with elements of that line we can use count_pieces
+
+``` shell
+count_pieces(_,[],0).
+count_pieces(Value, [Value | Rest], Count) :-
+    count_pieces(Value, Rest, SubCount),
+    Count is SubCount + 1.
+count_pieces(Value, [First | Rest], Count) :-
+    First =\= Value,
+    count_pieces(Value, Rest, Count).
+```
 
 
 
