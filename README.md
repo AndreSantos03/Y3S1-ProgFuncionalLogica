@@ -192,10 +192,13 @@ The predicate game_over(+GameState, +Winner) analyzes the provided game state an
  
 
 
+#### Conclusions
+ 
+In conclusion, "Differo" is an engaging abstract game that challenges players to strategize and calculate the balance of power between their faction and the opponent's.
 
+This document provides a comprehensive description of the game, including details about the board, pieces, end conditions, preparation, moving rules, and internal state representation and visualization. Additionally, the document covers important aspects of the game, such as move validation, directions, and move execution. It ensures that players have a clear understanding of how to make valid moves and progress in the game.
 
-
-
+Overall, this project has been a valuable opportunity to enhance my Prolog skills significantly. Through the development of the 'Differo' game, I've deepened my understanding of Prolog's logic programming principles and its application in creating complex, rule-based systems. I've learned to think critically and logically, which are crucial skills in Prolog programming (and others). 
 
 
 
