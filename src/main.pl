@@ -61,6 +61,28 @@ move_handler(Board, 2, FinalBoard, TypePlayer1, 2, I1-J1) :-
     write('-------------------'),
     nl.
 
+move_handler(Board, 1, FinalBoard, 3, TypePlayer2, I1-J1) :-
+    get_available_moves(Board, 1, AvailableMoves),
+    print_available_moves(AvailableMoves),
+    bestComputerMove(1,AvailableMoves, [Start,End]),
+    move_board(Board, 1, Start, End, FinalBoard),
+    nl,
+    write('-------------------'),nl,
+    format('The computer has played the piece in position ~w to ~w!', [Start,End]),nl,
+    write('-------------------'),
+    nl.
+
+move_handler(Board, 2, FinalBoard, TypePlayer1, 3, I1-J1) :-
+    get_available_moves(Board, 2, AvailableMoves),
+    print_available_moves(AvailableMoves),
+    bestComputerMove(2,AvailableMoves, [Start,End]),
+    move_board(Board, 2, Start, End, FinalBoard),nl,
+    nl,
+    write('-------------------'),nl,
+    format('The computer has played the piece in position ~w to ~w!', [Start,End]),nl,
+    write('-------------------'),
+    nl.
+
 %debugging purposes
 % Enable tracing
 start_tracing :-

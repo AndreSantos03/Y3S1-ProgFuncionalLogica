@@ -57,7 +57,7 @@ initialstate([ % Board
     [0,0,0,0,0,3,3,3,3]
 ]).
 
-whitevalue([ % Board
+blackvalue([ % Board
 [0,0,0,0,1,1,1,1,1],
 [0,0,0,2,2,2,2,2,2],
 [0,0,3,3,3,3,3,3,3],
@@ -150,7 +150,6 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
 
 has_available_moves(Board, Color, AvailableMoves) :-
     get_available_moves(Board, Color, AvailableMoves),
-    write(AvailableMoves),
     AvailableMoves \= [].
 
 reach_goal(1, Board) :-
@@ -170,12 +169,18 @@ game_over(Board,Winner) :-
     \+ has_available_moves(Board, 1, AvailableMoves)),
     write('Player '), write(Color), write('is the winner.\n').
 
+getWhiteValue(I-J,Value):-
+    whitevalue(Board),
+    nth0(I, Board, Row),
+    nth0(J, Row, Value).
+
+getBlackValue(I-J,Value):-
+    blackvalue(Board),
+    nth0(I, Board, Row), 
+    nth0(J, Row, Value). 
+
 
 % Custom predicate to switch the turn between players
 switch_color(1, 2).
 switch_color(2, 1).
-
-
-
-
 

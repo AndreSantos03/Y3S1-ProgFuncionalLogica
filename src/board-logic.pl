@@ -80,8 +80,7 @@ valid_move(Color,Ui-Uj, Vi-Vj,Board) :-
     Count > 0,
     Vi is Ui, 
     Vj is Uj  +Count,
-    is_valid_position(Vi-Vj),
-    write('right'). %right
+    is_valid_position(Vi-Vj).
 
 valid_move(Color,Ui-Uj, Vi-Vj,Board) :- 
     is_valid_position(Ui-Uj),
@@ -89,8 +88,7 @@ valid_move(Color,Ui-Uj, Vi-Vj,Board) :-
     Count > 0,
     Vi is Ui, 
     Vj is Uj - Count,
-    is_valid_position(Vi-Vj),
-    write('left'). %left
+    is_valid_position(Vi-Vj).
 
 %DIAGONALS
 
@@ -100,16 +98,15 @@ valid_move(1,Ui-Uj,Vi-Vj):-
     steps_in_diag_left(1,Ui-Uj,Steps,Board),
     Steps > 0,
     Vi is Ui - Steps,
-    Vj is Uj,
-    write('white left').
+    Vj is Uj.
 
 valid_move(1,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps,Board),
     Steps > 0,
     Vi is Ui - Steps,
-    Vj is Uj + Steps,
-    write('white right').
+    Vj is Uj + Steps.
+
 
 %Black Pieces
 valid_move(2,Ui-Uj,Vi-Vj,Board):-
@@ -117,17 +114,14 @@ valid_move(2,Ui-Uj,Vi-Vj,Board):-
     steps_in_diag_left(1,Ui-Uj,Steps,Board),
     Steps > 0,
     Vi is Ui + Steps,
-    Vj is Uj,
-    write('black left').
+    Vj is Uj.
 
 valid_move(2,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps,Board),
     Steps > 0,
     Vi is Ui + Steps,
-    Vj is Uj - Steps,
-    write('black right').
-
+    Vj is Uj - Steps.
 
 get_bottom_left(8-J, 8-J).
 get_bottom_left(I-0, I-0).
