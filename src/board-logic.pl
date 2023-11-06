@@ -93,35 +93,31 @@ valid_move(Color,Ui-Uj, Vi-Vj,Board) :-
 %DIAGONALS
 
 %White pieces
-valid_move(1,Ui-Uj,Vi-Vj):-
+valid_move(1,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_left(1,Ui-Uj,Steps,Board),
-    Steps > 0,
     Vi is Ui - Steps,
     Vj is Uj.
 
 valid_move(1,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps,Board),
-    Steps > 0,
     Vi is Ui - Steps,
     Vj is Uj + Steps.
-
 
 %Black Pieces
 valid_move(2,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_left(1,Ui-Uj,Steps,Board),
-    Steps > 0,
-    Vi is Ui + Steps,
+    Vi is Ui - Steps,
     Vj is Uj.
 
 valid_move(2,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps,Board),
-    Steps > 0,
-    Vi is Ui + Steps,
-    Vj is Uj - Steps.
+    Vi is Ui - Steps,
+    Vj is Uj + Steps.
+
 
 get_bottom_left(8-J, 8-J).
 get_bottom_left(I-0, I-0).
@@ -136,7 +132,7 @@ get_bottom_left(I-J, N-M) :-
 
 
 % Base case to stop the recursion when I or J are out of bounds
-pieces_diagonal_left(I-_, []) :- I < 0.
+pieces_diagonal_left(I-_, [],Board) :- I < 0.
 
 pieces_diagonal_left(I-J, List,Board) :-
     I >= 0,
@@ -149,8 +145,8 @@ pieces_diagonal_left(I-J, List,Board) :-
 
 
 % Base case to stop the recursion when I or J are out of bounds
-pieces_diagonal_right(I-_, []) :- I < 0.
-pieces_diagonal_right(_-J, []) :- J > 8.
+pieces_diagonal_right(I-_, [],Board) :- I < 0.
+pieces_diagonal_right(_-J, [],Board) :- J > 8.
 
 pieces_diagonal_right(I-J, List,Board) :-
     I >= 0,
@@ -161,14 +157,12 @@ pieces_diagonal_right(I-J, List,Board) :-
     New_j is J + 1,    
     pieces_diagonal_right(New_i-New_j, NewList,Board).
 
-
-/* get_available_moves(Board, Color, AvailableMoves) :-
-    findall([I-J, I1-J1], (between(0, 8, I), between(0, 8, J), get_value(I-J, Color,Board), find_valid_moves(Board, Color, I-J, I1-J1)), AvailableMoves).
+findall([I-J, I1-J1], (between(0, 8, I), between(0, 8, J), get_value(I-J, Color,Board), find_valid_moves(Board, Color, I-J, I1-J1)), AvailableMoves).
 
 find_valid_moves(Board, Color, I-J, I1-J1) :-
     valid_move(Color, I-J, I1-J,Board),
     is_empty(I1-J1,Board),
-    is_valid_position(I1-J1). */
+    is_valid_position(I1-J1). 
 
 get_available_moves(Board, Color, AvailableMoves) :-
     findall([I-J, I1-J1], (between(0, 8, I), between(0, 8, J), get_value(I-J, Color, Board), find_valid_moves(Board, Color, I-J, I1-J1)), AvailableMoves).
@@ -177,3 +171,5 @@ find_valid_moves(Board, Color, I-J, I1-J1) :-
     valid_move(Color, I-J, I1-J1, Board),
     is_empty(I1-J1, Board),
     is_valid_position(I1-J1).
+
+
