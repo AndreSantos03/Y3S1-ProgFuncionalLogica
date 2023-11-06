@@ -18,17 +18,24 @@ play_game(Board, Color, FinalBoard, TypePlayer1, TypePlayer2) :-
     display_board(Board), % Display the current game board
     get_color(Color, ColorName),
     format('It''s the ~w''s pieces turn to move!', ColorName), nl,
-    (
-        has_available_moves(Board, Color, AvailableMoves) ->
-        move_handler(Board, Color, TempBoard, TypePlayer1, TypePlayer2, I1-J1), % Allow the player to make a move
+
+    % Allow the player to make a move
+    has_available_moves(Board, Color, AvailableMoves) ->
+    move_handler(Board, Color, TempBoard, TypePlayer1, TypePlayer2, I1-J1),
+    
+    % Check if the current player has reached the goal at the end of their turn
+    (reach_goal(Color, TempBoard) ->
+        game_over(TempBoard, Color), % Player has reached the goal and won
+        FinalBoard = TempBoard
+    ;
+        % Continue the game
         switch_color(Color, NextColor),
-        (
-            reach_goal(TempBoard, Color) -> game_over(TempBoard, Winner) ; % Check for a winner
-            play_game(TempBoard, NextColor, FinalBoard, TypePlayer1, TypePlayer2)
-        )
-        ;
-        game_over(Board, Winner) % Handle game over if no available moves for the current player
-    ).
+        play_game(TempBoard, NextColor, FinalBoard, TypePlayer1, TypePlayer2)
+    )
+    ;
+    % Handle game over if no available moves for the current player
+    game_over(Board, Winner),
+    FinalBoard = Board.
 
 % Handle the move for different player types
 move_handler(Board, 1, FinalBoard, 1, TypePlayer2, I1-J1) :-
