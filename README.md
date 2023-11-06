@@ -2,7 +2,7 @@
 
 Group 
 
-André (up) - 50%
+André Santos(up202108658) - 50%
 
 Inês Ferreira de Almeida (up202004513) - 50%
 
