@@ -8,7 +8,7 @@ Inês Ferreira de Almeida (up202004513) - 50%
 
 ## Description of the game
 
-Differo is an abstract game for 2 players by Kashio Fujii. See documentation [here](differo_EN.pdf) or visit [this](https://boardgamegeek.com/boardgame/375056/differo).
+Differo is an abstract game for 2 players by Kashio Fujii. See documentation [here](differo_en.pdf) or visit [this](https://boardgamegeek.com/boardgame/375056/differo).
 
 In this game, victory is achieved through strategic calculations of the power balance between your faction and the adversary's, as well as by reinforcing your own forces and impeding the opponent's progress towards the ultimate goal.
 As you progressively advance your own game pieces, you may encounter challenges in impeding the opponent's advancing pieces. This gameplay offers the excitement of a thrilling abstract experience.
