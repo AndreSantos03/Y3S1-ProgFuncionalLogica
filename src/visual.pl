@@ -138,7 +138,3 @@ print_available_moves_inner([[StartPos, TargetPos] | Rest]):-
     print_available_moves_inner(Rest).
 
 
-
-test:-
-    initialstate(Board),
-    print_board(Board).

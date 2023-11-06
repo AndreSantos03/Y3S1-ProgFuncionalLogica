@@ -79,21 +79,21 @@ read_coordinates(I-J) :-
     read(J),
     !. % Read the second number into J
 
-get_base_coordinates(Color, I-J) :-
+get_base_coordinates(Color, I-J,Board) :-
     write('Enter the coordinates (I-J) from where you want to move your piece: '),
     read_coordinates(I-J),
-    get_value(I-J,Color),
+    get_value(I-J,Color,Board),
     is_valid_position(I-J).
 
-get_target_coordinates(I-J) :-
+get_target_coordinates(I-J,Board) :-
     write('Enter the coordinates (I-J) to where you want to move your piece: '),
     read_coordinates(I-J),
-    is_empty(I-J),
+    is_empty(I-J,Board),
     is_valid_position(I-J).
 
-move_choice(Color, I-J, I1-J1) :-
-    get_base_coordinates(Color, I-J),
-    get_target_coordinates(I1-J1).
+move_choice(Color, I-J, I1-J1,Board) :-
+    get_base_coordinates(Color, I-J,Board),
+    get_target_coordinates(I1-J1,Board).
 
 move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
     update_board(Board, I, J, 0, TempBoard),
@@ -101,23 +101,21 @@ move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
 
 
 move(Board, Color,FinalBoard) :-
-    move_choice(Color, I-J, I1-J1),
-    (valid_move(Color, I-J, I1-J1) ->
+    move_choice(Color, I-J, I1-J1,Board),
+    (valid_move(Color, I-J, I1-J1,Board) ->
         move_board(Board, Color, I-J, I1-J1, FinalBoard)
     ;   write('The move you inputted was not valid!'), nl
     ).
 
-is_empty(I-J):-
-    get_value(I-J,Value),
+is_empty(I-J,Board):-
+    get_value(I-J,Value,Board),
     Value is 0.
 
-get_value(I-J, Value) :-
-    initialstate(Board), % Load the board
+get_value(I-J, Value,Board) :-
     nth0(I, Board, Row), % Get the row at position I
     nth0(J, Row, Value). % Get the value at position J
 
-get_row(I,Row):-
-    initialstate(Board),
+get_row(I,Row,Board):-
     nth0(I,Board,Row).
 
 update_board(Board, I, J, NewValue, NewBoard) :-
@@ -142,6 +140,7 @@ update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
 
 has_available_moves(Board, Color, AvailableMoves) :-
     get_available_moves(Board, Color, AvailableMoves),
+    write(AvailableMoves),
     AvailableMoves \= [].
 
 reach_goal(1, Board) :-
@@ -156,9 +155,9 @@ reach_goal(2, Board) :-
 game_over(Board,Winner) :-
     (reach_goal(Winner, Board);
     Winner = 1,
-    \+ has_availableMoves(Board, 2, AvailableMoves);
+    \+ has_available_moves(Board, 2, AvailableMoves);
     Winner = 2,
-    \+ has_availableMoves(Board, 1, AvailableMoves)),
+    \+ has_available_moves(Board, 1, AvailableMoves)),
     write('Player '), write(Color), write('is the winner.\n').
 
 
