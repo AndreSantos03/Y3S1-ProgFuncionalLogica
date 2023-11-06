@@ -114,6 +114,16 @@ get_target_coordinates(I-J, Board) :-
         fail  % Fail to repeat the loop
     ).
 
+% Allow the user to choose a move and verify its validity.
+move_choice(Color, I-J, I1-J1, Board) :-
+    repeat,
+    get_base_coordinates(Color, I-J, Board),
+    get_target_coordinates(I1-J1, Board),
+    (valid_move(Color, I-J, I1-J1, Board) ->  % Check if it's a valid move
+        true
+    ;   write('Invalid move. Please try again.'), nl,
+        fail  % Fail to repeat the loop
+    ).
 
 
 % Allow the user to choose a move and verify its validity.
