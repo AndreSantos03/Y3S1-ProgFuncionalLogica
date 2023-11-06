@@ -48,8 +48,35 @@ The board is internally represented as a list of lists. Because our game has the
 Some positions are not valid (e.g. (1, 1)), which can be checked by calling board_is_valid_position(I-J). 
 
 #### Initial State
+```shell
+initialstate([ % Board
+    [3,3,3,3,0,0,0,0,0],
+    [3,3,3,0,2,2,2,2,0],
+    [3,3,0,2,0,2,0,2,0],
+    [3,0,2,2,2,2,2,2,0],
+    [0,0,0,0,0,0,0,0,0],
+    [0,1,1,1,1,1,1,0,3],
+    [0,1,0,1,0,1,0,3,3],
+    [0,1,1,1,1,0,3,3,3],
+    [0,0,0,0,0,3,3,3,3]
+]).
+```
 
 #### Intermediate State
+
+```shell
+intermediatestate([ % Board
+    [3,3,3,3,0,0,0,0,0],
+    [3,3,3,0,2,2,2,0,0],
+    [3,3,2,1,0,1,0,0,0],
+    [3,0,2,0,1,2,2,0,0],
+    [0,0,1,2,2,0,0,2,0],
+    [0,1,1,2,1,1,1,0,3],
+    [0,0,1,1,2,1,0,3,3],
+    [0,1,2,0,0,0,3,3,3],
+    [0,0,0,0,0,3,3,3,3]
+]).
+```
 
 #### Final State
 
@@ -62,14 +89,30 @@ Some positions are not valid (e.g. (1, 1)), which can be checked by calling boar
 We added labels to the lines on the game board using 'i' and 'j' is a helpful and intuitive approach. This labeling system provides a clear, intuitive and user-friendly way to reference specific locations on the board.
 
 The pieces and empty positions are represented in the following way:
-  - White piece: W
-  - Black piece: B
-  - empty space: o
+  - White piece: ``` W ```
+  - Black piece: ``` B ```
+  - empty space: ``` o ```
 
 Here you can see the initial board:
 
 For this we iterate through through the game state considering the different scenarios (Is the position in the middle? Is the last position of the row? (we don't want --- after it) Is the last row?)
 
+#### User interation
+
+Throughout the game, players will receive the necessary instructions to enhance the game's intuitiveness. 
+
+We will inform you about the winner when the game is over, 
+```shell
+write('Player '), write(Color), write('is the winner.\n').
+```
+
+whose turn it is, 
+
+and display your valid moves.
+
+To int
+
+### Move Validation and Execution
 
 
 
