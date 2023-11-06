@@ -89,17 +89,26 @@ read_coordinates(I-J) :-
     read(J),
     !. % Read the second number into J
 
-get_base_coordinates(Color, I-J,Board) :-
+get_base_coordinates(Color, I-J, Board) :-
+    repeat,
     write('Enter the coordinates (I-J) from where you want to move your piece: '),
     read_coordinates(I-J),
-    get_value(I-J,Color,Board),
-    is_valid_position(I-J).
+    (is_valid_position(I-J) ->  % Check if the position is valid
+        get_value(I-J, Color, Board)
+    ;   write('Invalid position. Please try again.'), nl,
+        fail  % Fail to repeat the loop
+    ).
 
-get_target_coordinates(I-J,Board) :-
+
+get_target_coordinates(I-J, Board) :-
+    repeat,
     write('Enter the coordinates (I-J) to where you want to move your piece: '),
     read_coordinates(I-J),
-    is_empty(I-J,Board),
-    is_valid_position(I-J).
+    (is_valid_position(I-J), is_empty(I-J, Board) ->  % Check if the position is valid and empty
+        true
+    ;   write('Invalid target position. Please try again.'), nl,
+        fail  % Fail to repeat the loop
+    ).
 
 move_choice(Color, I-J, I1-J1,Board) :-
     get_base_coordinates(Color, I-J,Board),
