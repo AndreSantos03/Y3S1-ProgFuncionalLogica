@@ -228,7 +228,7 @@ The computer can be dummy (```randomMove```) or smart (```bestComputerMove```).
 
 In the ```randomMove``` predicate, a random move is generated from a list of available moves. It calculates the number of available moves, selects a random index within that range, and retrieves the move at that index.
 
-The ```bestComputerMove' predicate is used to determine the best move for the computer player. It takes into account the player's color (White or Black) and the list of available moves. The available moves are sorted based on custom comparison predicates ('compareWhite' for White and 'compareBlack' for Black) that assign values to moves and determine their order.
+The ```bestComputerMove``` predicate is used to determine the best move for the computer player. It takes into account the player's color (White or Black) and the list of available moves. The available moves are sorted based on custom comparison predicates ('compareWhite' for White and 'compareBlack' for Black) that assign values to moves and determine their order.
 
 The ```compareWhite``` and 'compareBlack' predicates calculate values for moves specific to White and Black players and compare these values to sort the available moves in descending order. The best move is then selected as the first move in the sorted list, ensuring that the computer player makes an informed and strategic move based on the assigned values. This code enhances the game's computer AI by making intelligent decisions for each player's turn.
 
