@@ -45,6 +45,7 @@
 %2 stands for black piece
 %3 stands for unused space, mostly for spacing
 
+% Define the initial state of the game board with pieces and empty spaces.
 initialstate([ % Board
     [3,3,3,3,0,0,0,0,0],
     [3,3,3,0,2,2,2,2,0],
@@ -57,6 +58,7 @@ initialstate([ % Board
     [0,0,0,0,0,3,3,3,3]
 ]).
 
+% Define the value matrix for black pieces.
 blackvalue([ % Board
 [0,0,0,0,1,1,1,1,1],
 [0,0,0,2,2,2,2,2,2],
@@ -69,6 +71,7 @@ blackvalue([ % Board
 [9,9,9,9,9,0,0,0,0]
 ]).
 
+% Define the value matrix for white pieces.
 whitevalue([ % Board
 [0,0,0,0,9,9,9,9,9],
 [0,0,0,8,8,8,8,8,8],
@@ -89,6 +92,7 @@ read_coordinates(I-J) :-
     read(J),
     !. % Read the second number into J
 
+% Get the coordinates from the user for the base piece they want to move.
 get_base_coordinates(Color, I-J, Board) :-
     repeat,
     write('Enter the coordinates (I-J) from where you want to move your piece: '),
@@ -99,7 +103,7 @@ get_base_coordinates(Color, I-J, Board) :-
         fail  % Fail to repeat the loop
     ).
 
-
+% Get the coordinates from the user for the target position to move their piece.
 get_target_coordinates(I-J, Board) :-
     repeat,
     write('Enter the coordinates (I-J) to where you want to move your piece: '),
@@ -110,6 +114,7 @@ get_target_coordinates(I-J, Board) :-
         fail  % Fail to repeat the loop
     ).
 
+% Allow the user to choose a move and verify its validity.
 move_choice(Color, I-J, I1-J1, Board) :-
     repeat,
     get_base_coordinates(Color, I-J, Board),
@@ -119,51 +124,56 @@ move_choice(Color, I-J, I1-J1, Board) :-
     ;   write('Invalid move. Please try again.'), nl,
         fail  % Fail to repeat the loop
     ).
-    
+
+% Update the game board after a piece is moved.
 move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
     update_board(Board, I, J, 0, TempBoard),
     update_board(TempBoard, I1, J1, Color, FinalBoard).
 
-
-move(Board, Color, FinalBoard) :-
-    move_choice(Color, I-J, I1-J1, Board),
-    move_board(Board, Color, I-J, I1-J1, FinalBoard).
-
-is_empty(I-J,Board):-
-    get_value(I-J,Value,Board),
+% Check if a given position on the board is empty.
+is_empty(I-J, Board) :-
+    get_value(I-J, Value, Board),
     Value is 0.
 
-get_value(I-J, Value,Board) :-
+% Get the value at a specific position on the board.
+get_value(I-J, Value, Board) :-
     nth0(I, Board, Row), % Get the row at position I
     nth0(J, Row, Value). % Get the value at position J
 
-get_row(I,Row,Board):-
-    nth0(I,Board,Row).
+% Get a specific row from the board.
+get_row(I, Row, Board) :-
+    nth0(I, Board, Row).
 
+% Update the game board with a new value at a specified position.
 update_board(Board, I, J, NewValue, NewBoard) :-
     update_cell(Board, I, J, NewValue, UpdatedBoard),
     NewBoard = UpdatedBoard.
 
+% Update a specific cell within a row.
 update_cell([Row | Rest], 0, J, NewValue, [UpdatedRow | Rest]) :-
     update_row(Row, J, NewValue, UpdatedRow).
 
+% Recursively update the cells in a row.
 update_cell([Row | Rest], I, J, NewValue, [Row | UpdatedRest]) :-
     I > 0,
     I1 is I - 1,
     update_cell(Rest, I1, J, NewValue, UpdatedRest).
 
+% Update a specific cell within a row.
 update_row([_ | Rest], 0, NewValue, [NewValue | Rest]).
 
+% Recursively update the cells in a row.
 update_row([Value | Rest], J, NewValue, [Value | UpdatedRest]) :-
     J > 0,
     J1 is J - 1,
     update_row(Rest, J1, NewValue, UpdatedRest).
 
-
+% Check if there are available moves for a specific player.
 has_available_moves(Board, Color, AvailableMoves) :-
     get_available_moves(Board, Color, AvailableMoves),
     AvailableMoves \= [].
 
+% Determine if a player has reached their goal (winning condition).
 reach_goal(1, Board) :-
     % Check the first row (top edge)
     nth0(0, Board, FirstRow),
@@ -173,24 +183,26 @@ reach_goal(2, Board) :-
     nth0(8, Board, LastRow),
     member(2, LastRow).
 
-game_over(Board,Winner) :-
-    (reach_goal(Winner, Board);
-    Winner = 1,
-    \+ has_available_moves(Board, 2, AvailableMoves);
-    Winner = 2,
-    \+ has_available_moves(Board, 1, AvailableMoves)),
-    write('Player '), write(Color), write('is the winner.\n').
+% Determine if the game is over and print the winner.
+game_over(Board, Color) :-
+    (reach_goal(Color, Board);
+    Color = 1,
+    \+ has_available_moves(Board, 2, _);
+    Color = 2,
+    \+ has_available_moves(Board, 1, _)),
+    write('Player '), write(Color), write(' is the winner.\n').
 
-getWhiteValue(I-J,Value):-
+% Get the value of a white piece at a specific position.
+getWhiteValue(I-J, Value) :-
     whitevalue(Board),
     nth0(I, Board, Row),
     nth0(J, Row, Value).
 
-getBlackValue(I-J,Value):-
+% Get the value of a black piece at a specific position.
+getBlackValue(I-J, Value) :-
     blackvalue(Board),
-    nth0(I, Board, Row), 
-    nth0(J, Row, Value). 
-
+    nth0(I, Board, Row),
+    nth0(J, Row, Value).
 
 % Custom predicate to switch the turn between players
 switch_color(1, 2).
