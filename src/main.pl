@@ -15,7 +15,7 @@ game(FinalBoard) :-
     play_game(InitialBoard, 1, FinalBoard,TypePlayer1,TypePlayer2).
 
 play_game(Board, Color,FinalBoard,TypePlayer1,TypePlayer2) :-
-    print_board(Board),
+    display_board(Board),
     get_color(Color,ColorName),
     format('It''s the ~w''s pieces turn to move!',ColorName),nl,
     (has_available_moves(Board, Color, AvailableMoves) ->
