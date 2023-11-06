@@ -232,7 +232,7 @@ The ```bestComputerMove' predicate is used to determine the best move for the co
 
 The ```compareWhite``` and 'compareBlack' predicates calculate values for moves specific to White and Black players and compare these values to sort the available moves in descending order. The best move is then selected as the first move in the sorted list, ensuring that the computer player makes an informed and strategic move based on the assigned values. This code enhances the game's computer AI by making intelligent decisions for each player's turn.
 
-![Alt Text](/images/ComputerMoves.png)
+![Alt Text](/images/ComputerMove.png)
 
 ### Conclusions
  
