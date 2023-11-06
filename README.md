@@ -8,7 +8,7 @@ Inês Ferreira de Almeida (up202004513) - 50%
 
 ## Description of the game
 
-Differo is an abstract game for 2 players by Kashio Fujii. See documentation [here](differo_en.pdf) or visit [this](https://boardgamegeek.com/boardgame/375056/differo).
+Differo is an abstract game for 2 players by Kashio Fujii. See documentation [here](/differo_en.pdf) or visit [this](https://boardgamegeek.com/boardgame/375056/differo).
 
 In this game, victory is achieved through strategic calculations of the power balance between your faction and the adversary's, as well as by reinforcing your own forces and impeding the opponent's progress towards the ultimate goal.
 As you progressively advance your own game pieces, you may encounter challenges in impeding the opponent's advancing pieces. This gameplay offers the excitement of a thrilling abstract experience.
@@ -33,7 +33,7 @@ A player wins when one of their pieces reaches the goal.
 - Place pieces in predetermined positions (as shown below).
 - The players choose their own color. The one who chooses White takes the first turn.
 
-![Alt Text](/images/InitialBoard)
+![Alt Text](/images/InitialBoard.png)
 
 ### Moving rules
 
@@ -131,7 +131,7 @@ Starting the game, we can see the start menu:
 
 #### Menus
 
-![Alt Text](/images/startMenu)
+![Alt Text](/images/startMenu.png)
 
 #### Board
 
@@ -144,7 +144,7 @@ The pieces and empty positions are represented in the following way:
 
 Here you can see the initial board:
 
-![Alt Text](/images/InitialState)
+![Alt Text](/images/InitialState.png)
 
 For this we iterate through the game state considering the different scenarios (Is the position in the middle? Is the last position of the row? (we don't want --- after it) Is the last row?)
 
@@ -159,7 +159,7 @@ write('Player '), write(Color), write('is the winner.\n').
 
 whose turn it is, and display player's valid moves to make easy for them know all the options they have.
 
-![Alt Text](/images/WhiteToPlay)
+![Alt Text](/images/WhiteToPlay.png)
 
 We also require users to specify which piece they want to move and where they want to place it. To facilitate this, we ask for base and then target coordinates in the format (I-J), and users provide both I and J separately
 
@@ -232,7 +232,7 @@ The ```bestComputerMove' predicate is used to determine the best move for the co
 
 The ```compareWhite``` and 'compareBlack' predicates calculate values for moves specific to White and Black players and compare these values to sort the available moves in descending order. The best move is then selected as the first move in the sorted list, ensuring that the computer player makes an informed and strategic move based on the assigned values. This code enhances the game's computer AI by making intelligent decisions for each player's turn.
 
-![Alt Text](/images/ComputerMoves)
+![Alt Text](/images/ComputerMoves.png)
 
 ### Conclusions
  
