@@ -2,13 +2,13 @@
 
 Group 
 
-André Bernardo Ferreira Santos(up202108658) - 50%
+André Bernardo Ferreira Santos (up202108658) - 50%
 
 Inês Ferreira de Almeida (up202004513) - 50%
 
 ## Description of the game
 
-Differo is an abstract game for 2 players by Kashio Fujii. 
+Differo is an abstract game for 2 players by Kashio Fujii. See documentation [here](differo_EN.pdf) or visit [this](https://boardgamegeek.com/boardgame/375056/differo).
 
 In this game, victory is achieved through strategic calculations of the power balance between your faction and the adversary's, as well as by reinforcing your own forces and impeding the opponent's progress towards the ultimate goal.
 As you progressively advance your own game pieces, you may encounter challenges in impeding the opponent's advancing pieces. This gameplay offers the excitement of a thrilling abstract experience.
@@ -33,9 +33,11 @@ A player wins when one of their pieces reaches the goal.
 - Place pieces in predetermined positions (as shown below).
 - The players choose their own color. The one who chooses White takes the first turn.
 
+![Alt Text](images/InitialBoard)
+
 ### Moving rules
 
-The player can only move one of their pieces in their turn, acording to the follwing rules:
+The player can only move one of their pieces in their turn, acording to the following rules:
 - The piece moves in a straight line and can jump over any number of pieces, whether they belong to the player or the opponent.
 - The piece can move a number of steps equal to (number of player pieces) − (number of player opponent’s pieces) along the line. If this value is less than or equal to 0, the piece cannot move on the line.
 - The player cannot move a piece off the board, into an already occupied space, or into the opponent's goal.
@@ -109,11 +111,27 @@ intermediatestate([ % Board
 
 #### Final State
 
+```shell
+intermediatestate([ % Board
+    [3,3,3,3,0,0,1,0,0],
+    [3,3,3,0,2,2,2,0,0],
+    [3,3,2,0,0,1,0,0,0],
+    [3,0,2,0,1,2,2,0,0],
+    [0,0,1,2,2,0,0,2,0],
+    [0,1,1,2,1,1,1,0,3],
+    [0,0,1,1,2,1,0,3,3],
+    [0,1,2,0,0,0,3,3,3],
+    [0,0,0,0,0,3,3,3,3]
+]).
+```
+
 ### Game State Visualization
 
 Starting the game, we can see the start menu:
 
 #### Menus
+
+![Alt Text](images/startMenu)
 
 #### Board
 
@@ -126,6 +144,8 @@ The pieces and empty positions are represented in the following way:
 
 Here you can see the initial board:
 
+![Alt Text](images/InitialState)
+
 For this we iterate through the game state considering the different scenarios (Is the position in the middle? Is the last position of the row? (we don't want --- after it) Is the last row?)
 
 #### User interation
@@ -137,9 +157,9 @@ We will inform the users about the winner when the game is over,
 write('Player '), write(Color), write('is the winner.\n').
 ```
 
-whose turn it is, 
+whose turn it is, and display player's valid moves to make easy for them know all the options they have.
 
-and display player's valid moves to make easy for them know all the options they have.
+![Alt Text](images/WhiteToPlay)
 
 We also require users to specify which piece they want to move and where they want to place it. To facilitate this, we ask for base and then target coordinates in the format (I-J), and users provide both I and J separately
 
@@ -176,25 +196,47 @@ Pieces can move along the lines in six directions, as shown below.
 This prompts the need to have different methods for creating the list for the different directions. 
 Example of the directions 5 and 6 below.
 
-#### Move Execution
+### Move Execution
 
 After the move choice, we call move_board that removes the piece from the base coordinates and adds the piece in the target coordinates
 
-#### List of valid Moves
+### List of valid Moves
 
 As seen before, we give the user the list of all valid moves.
 
-#### End of Game
+``` shell 
+get_available_moves(Board, Color, AvailableMoves) :-
+    findall([I-J, I1-J1], (between(0, 8, I), between(0, 8, J), get_value(I-J, Color, Board), find_valid_moves(Board, Color, I-J, I1-J1)), AvailableMoves).
 
-The predicate game_over(+GameState, +Winner) analyzes the provided game state and determines whether the game has indeed ended. It checks if the winner has reached the goal or if the loser has no valid moves remaining.
+find_valid_moves(Board, Color, I-J, I1-J1) :-
+    valid_move(Color, I-J, I1-J1, Board),
+    is_empty(I1-J1, Board),
+    is_valid_position(I1-J1).
+```
 
-#### Evalution
+### End of Game
+
+The predicate ```game_over(+GameState, +Winner)``` analyzes the provided game state and determines whether the game has indeed ended. It checks if the winner has reached the goal or if the loser has no valid moves remaining.
+
+### Game State Evaluation
+
+We evaluate positions based on their location on the board, assigning more points for positions closer to the goal. However, no points are awarded if the spot is occupied by an opponent's piece.
+
+### Computer Plays
+
+The computer can be dummy (```randomMove```) or smart (```bestComputerMove```).
+
+In the ```randomMove``` predicate, a random move is generated from a list of available moves. It calculates the number of available moves, selects a random index within that range, and retrieves the move at that index.
+
+The ```bestComputerMove' predicate is used to determine the best move for the computer player. It takes into account the player's color (White or Black) and the list of available moves. The available moves are sorted based on custom comparison predicates ('compareWhite' for White and 'compareBlack' for Black) that assign values to moves and determine their order.
+
+The ```compareWhite``` and 'compareBlack' predicates calculate values for moves specific to White and Black players and compare these values to sort the available moves in descending order. The best move is then selected as the first move in the sorted list, ensuring that the computer player makes an informed and strategic move based on the assigned values. This code enhances the game's computer AI by making intelligent decisions for each player's turn.
+
+![Alt Text](images/ComputerMoves)
+
+### Conclusions
  
-
-
-#### Conclusions
- 
-In conclusion, "Differo" is an engaging abstract game that challenges players to strategize and calculate the balance of power between their faction and the opponent's.
+In conclusion, Differo is an engaging abstract game that challenges players to strategize and calculate the balance of power between their faction and the opponent's.
 
 This document provides a comprehensive description of the game, including details about the board, pieces, end conditions, preparation, moving rules, and internal state representation and visualization. Additionally, the document covers important aspects of the game, such as move validation, directions, and move execution. It ensures that players have a clear understanding of how to make valid moves and progress in the game.
 
