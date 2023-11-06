@@ -110,21 +110,24 @@ get_target_coordinates(I-J, Board) :-
         fail  % Fail to repeat the loop
     ).
 
-move_choice(Color, I-J, I1-J1,Board) :-
-    get_base_coordinates(Color, I-J,Board),
-    get_target_coordinates(I1-J1,Board).
-
+move_choice(Color, I-J, I1-J1, Board) :-
+    repeat,
+    get_base_coordinates(Color, I-J, Board),
+    get_target_coordinates(I1-J1, Board),
+    (valid_move(Color, I-J, I1-J1, Board) ->  % Check if it's a valid move
+        true
+    ;   write('Invalid move. Please try again.'), nl,
+        fail  % Fail to repeat the loop
+    ).
+    
 move_board(Board, Color, I-J, I1-J1, FinalBoard) :-
     update_board(Board, I, J, 0, TempBoard),
     update_board(TempBoard, I1, J1, Color, FinalBoard).
 
 
-move(Board, Color,FinalBoard) :-
-    move_choice(Color, I-J, I1-J1,Board),
-    (valid_move(Color, I-J, I1-J1,Board) ->
-        move_board(Board, Color, I-J, I1-J1, FinalBoard)
-    ;   write('The move you inputted was not valid!'), nl
-    ).
+move(Board, Color, FinalBoard) :-
+    move_choice(Color, I-J, I1-J1, Board),
+    move_board(Board, Color, I-J, I1-J1, FinalBoard).
 
 is_empty(I-J,Board):-
     get_value(I-J,Value,Board),
