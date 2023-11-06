@@ -78,6 +78,8 @@ valid_move(Color,Ui-Uj, Vi-Vj,Board) :-
     is_valid_position(Ui-Uj),
     steps_in_row(Color,Ui,Count,Board), 
     Count > 0,
+    write('dadadadwdw'),nl,
+    write(Count),nl, 
     Vi is Ui, 
     Vj is Uj  +Count,
     is_valid_position(Vi-Vj).
@@ -86,6 +88,8 @@ valid_move(Color,Ui-Uj, Vi-Vj,Board) :-
     is_valid_position(Ui-Uj),
     steps_in_row(Color,Ui,Count,Board), 
     Count > 0,
+    write('da'),nl,
+    write(Count),nl, 
     Vi is Ui, 
     Vj is Uj - Count,
     is_valid_position(Vi-Vj).
@@ -96,12 +100,18 @@ valid_move(Color,Ui-Uj, Vi-Vj,Board) :-
 valid_move(1,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_left(1,Ui-Uj,Steps,Board),
+    Steps >0,
+    write('dadadada'),nl,
+    write(Steps),nl, 
     Vi is Ui - Steps,
     Vj is Uj.
 
 valid_move(1,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps,Board),
+    Steps >0,
+    write('dada'),nl,
+    write(Steps),nl, 
     Vi is Ui - Steps,
     Vj is Uj + Steps.
 
@@ -109,14 +119,16 @@ valid_move(1,Ui-Uj,Vi-Vj,Board):-
 valid_move(2,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_left(1,Ui-Uj,Steps,Board),
-    Vi is Ui - Steps,
+    Steps >0,
+    Vi is Ui + Steps,
     Vj is Uj.
 
 valid_move(2,Ui-Uj,Vi-Vj,Board):-
     is_valid_position(Ui-Uj),
     steps_in_diag_right(1,Ui-Uj,Steps,Board),
-    Vi is Ui - Steps,
-    Vj is Uj + Steps.
+    Steps >0,
+    Vi is Ui + Steps,
+    Vj is Uj - Steps.
 
 
 get_bottom_left(8-J, 8-J).
@@ -157,12 +169,7 @@ pieces_diagonal_right(I-J, List,Board) :-
     New_j is J + 1,    
     pieces_diagonal_right(New_i-New_j, NewList,Board).
 
-findall([I-J, I1-J1], (between(0, 8, I), between(0, 8, J), get_value(I-J, Color,Board), find_valid_moves(Board, Color, I-J, I1-J1)), AvailableMoves).
 
-find_valid_moves(Board, Color, I-J, I1-J1) :-
-    valid_move(Color, I-J, I1-J,Board),
-    is_empty(I1-J1,Board),
-    is_valid_position(I1-J1). 
 
 get_available_moves(Board, Color, AvailableMoves) :-
     findall([I-J, I1-J1], (between(0, 8, I), between(0, 8, J), get_value(I-J, Color, Board), find_valid_moves(Board, Color, I-J, I1-J1)), AvailableMoves).

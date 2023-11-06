@@ -11,7 +11,6 @@ play :-
 % Entry point for the game
 game(FinalBoard) :-
     initialstate(InitialBoard),
-    valid_move(1,5-4,4-5,InitialBoard),
     start_menu(TypePlayer1,TypePlayer2),
     play_game(InitialBoard, 1, FinalBoard,TypePlayer1,TypePlayer2).
 
